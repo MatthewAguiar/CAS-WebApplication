@@ -1,0 +1,368 @@
+
+html{
+  font-family: Arial;
+}
+
+body{
+  background-color: lightblue;
+}
+
+.main-banner{
+  width: 100%;
+  height: 5.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgb(240, 240, 240);
+  border-bottom: black solid 1px;
+}
+
+.main-banner img{
+  width: 4.5rem;
+  height: 4.5rem;
+  margin-left: 2.5rem;
+}
+
+.CAS-experiences{
+  display: flex;
+  flex-direction: column;
+}
+
+#portfollio-cas-list{
+  font-size: 2rem;
+  color: white;
+  font-weight: bold;
+  background-color: rgb(125, 225, 125);
+  display: table;
+  text-align: center;
+  margin-left: 2rem;
+  margin-top: 2rem;
+  padding: 1.2rem;
+  border-radius: 4px;
+  box-shadow: 0px 2px 7px black;
+}
+
+#sturgis-icon{
+  border-radius: 8px;
+  box-shadow: 0px 2px 5px black;
+}
+
+#add-experience, #logout-button{
+  border: none;
+  margin-right: 2.5rem;
+  padding: 0.7rem;
+  border-radius: 4px;
+  color: white;
+  background-color: rgb(30, 144, 255);
+  transition: background-color 150ms linear;
+  box-shadow: 0px 2px 5px black;
+}
+
+#add-experience:hover, #logout-button:hover{
+  background-color: rgb(0, 0, 150);
+}
+
+#add-experience{
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 5px;
+  margin-right: 1rem;
+  text-align: center;
+}
+
+.alerts{
+  display: inline-block;
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  margin: 2rem 2.5rem;
+  background-color: rgba(255, 50, 75, 1);
+  padding: 0.75rem;
+  border-radius: 4px;
+  box-shadow: 0px 2px 5px black;
+}
+
+.new-CAS-form{
+  position: absolute;
+  left: 20%;
+  top: 5%;
+  width: 70%;
+  height: 89%;
+  background-color: rgb(255, 255, 235);
+  border: 1.5px solid black;
+  border-radius: 5px;
+}
+
+.fade-background{
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 0.35;
+}
+/*MAKE CLASS FOR ABSOLUTE!*/
+span{
+  position: absolute;
+  font-family: 'Work Sans';
+  font-weight: bold;
+  font-size: 2rem;
+  margin: 2rem 2rem;
+}
+
+#experience-name-input{
+  margin: 0.5rem 1rem 0.5rem 2rem;
+  width: 25rem;
+  height: 1.3rem;
+}
+
+h1{
+  font-size: 12px;
+  margin-top: 6rem;
+  margin-left: 2rem;
+}
+
+form{
+  width: 75%;
+  height: auto;
+  background-color: rgb(255, 255, 235);
+  overflow: scroll;
+}
+
+input{
+  font-size: 0.85rem;
+}
+
+label{
+  font-size: 0.9rem;
+}
+
+#cas-project-img{
+  position: absolute;
+  top: 6.8rem;
+  left: 33.1rem;
+  width: 32px;
+  height: auto;
+}
+
+h2{
+  margin-top: 1rem;
+  margin-left: 2rem;
+}
+
+.CAS-strand-box{
+  width: auto;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  display: flex;
+  justify-content: space-around;
+}
+
+.CAS-strand-buttons{
+  width: 7rem;
+  margin-top: 3rem;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: white;
+  border: none;
+  box-shadow: 1px 1px 1px black;
+  opacity: 0.4;
+  transition: background-color 150ms linear;
+  transition: opacity 150ms linear;
+}
+
+#creativity{
+  background-color: rgb(255, 100, 100);
+}
+
+#creativity:hover{
+  background-color: rgb(255, 0, 0);
+  opacity: 1;
+  box-shadow: 1px 1px 3px black;
+}
+
+#action{
+  background-color: rgb(135, 206, 250);
+}
+
+#action:hover{
+  background-color: rgb(0, 0, 255);
+  opacity: 1;
+  box-shadow: 1px 1px 3px black;
+}
+
+#service{
+  background-color: rgb(144, 238, 144);
+}
+
+#service:hover{
+  background-color: rgb(0, 200, 0);
+  opacity: 1;
+  box-shadow: 1px 1px 3px black;
+}
+
+.big-letters{
+  font-size: 2rem;
+}
+
+#approach-field{
+  margin-top: 2rem;
+}
+
+.cas-approach-box{
+  width: auto;
+  display: flex;
+  margin-top: 1.5rem;
+  justify-content: space-around;
+}
+
+.standard-approach-class{
+  border-radius: 4px;
+  padding: 0.3rem;
+}
+
+#on-going-label{
+  border: 1px solid rgb(250, 100, 100);
+  color: rgb(250, 100, 100);
+}
+
+#school-based-label{
+  border: 1px solid rgb(0, 128, 0);
+  color: rgb(0, 128, 0);
+}
+
+#community-based-label{
+  border: 1px solid rgb(0, 0, 200);
+  color: rgb(0, 0, 200);
+}
+
+#individual-label{
+  border: 1px solid rgb(139, 0, 139);
+  color: rgb(139, 0, 139);
+}
+
+#supervisor-field{
+  margin-top: 2.5rem;
+}
+
+.supervisor-info{
+  margin-top: 1.5rem;
+  display: flex;
+  width: 94%;
+  justify-content: space-between;
+}
+
+h3{
+  font-size: 12px;
+}
+
+.supervisor-input{
+  margin-top: 0.5rem;
+  width: 11rem;
+  height: 1.3rem;
+}
+
+.describe-cas-experience-label{
+  margin-top: 2rem;
+}
+
+textarea{
+  resize: none;
+  width: 93.5%;
+  height: 10rem;
+  font-family: Arial;
+}
+
+#learning-outcomes-label{
+  margin-top: 2rem;
+}
+
+.learning-outcomes-box{
+  margin-top: 1rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.learning-outcomes li{
+  margin-top: 0.5rem;
+}
+
+.date-enter{
+  margin-top: 2rem;
+}
+
+#setup-dates-calendar{
+  margin-left: 11rem;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+  width: 60%;
+  height: 75%;
+  border: 1px solid black;
+}
+
+.master-calendar-nav{
+  width: 100%;
+  height: 39.5rem;
+  background-color: rgb(240, 240, 240);
+  position: fixed;
+  top: 45rem;
+  border: 1px solid black;
+  transition: top 1s ease;
+}
+
+#master-calendar{
+  width: 55%;
+  height: 80%;
+  margin: 1.5rem auto;
+  border: 1px solid black;
+  border-radius: 4px;
+  display: block;
+}
+
+#expand-button{
+  position: absolute;
+  top: -1.3rem;
+  margin-left: 2rem;
+  width: 3rem;
+  height: 1.3rem;
+  border-radius: 4px;
+  border: 1px solid black;
+  background-color: rgb(240, 240, 240);
+  transition: background-color 150ms linear;
+}
+
+#expand-button:hover{
+  background-color: rgb(125, 125, 125);
+}
+
+.calendar-buttons{
+  margin-top: 2rem;
+  margin-left: 2rem;
+}
+
+.calendar-button-style{
+  margin-right: 2.5rem;
+  padding: 0.7rem;
+  border-radius: 4px;
+  color: white;
+  background-color: rgb(30, 144, 255);
+  transition: background-color 150ms linear;
+  box-shadow: 0px 2px 5px black;
+  border: none;
+}
+
+.calendar-button-style:hover{
+    background-color: rgb(0, 0, 150);
+}
+
+.expand-calendar{
+    top: 6.7rem;
+}
+
+.master-calendar-nav img{
+  width: 4.5rem;
+  height: auto;
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Sturgis CAS</title>
+    <link rel="icon" type = "image/png" sizes = "16x16"  href = "cas.png">
+    <link href="CSS/Stylesheets/reset.css" type = "text/css" rel = "stylesheet">
+    <link href="CSS/Stylesheets/portfollio.css" type = "text/css" rel = "stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css">
+
+  </head>
+  <body>
+
+    <header class = "main-banner">
+      <img id = "sturgis-icon" src="http://www.sturgischarterschool.com/images/WebLOGO%20336x336.jpg" />
+      <img src = "https://managebac.com/images/features/icon_cas.png" />
+      <nav>
+        <button id = "add-experience" type="button" name="button">+</button>
+        <button id = "logout-button" type="button" name="button"></button>
+      </nav>
+    </header>
+
+    <header class = "CAS-experiences">
+      <h4 id = "portfollio-cas-list">Portfollio</h4>
+    </header>
+
+    <nav class = "master-calendar-nav">
+      <div class = "calendar-buttons">
+        <button id = "expand-button" type="button">▲</button>
+        <button class = "calendar-button-style" id = "calendar-button" type="button">Calendar</button>
+        <button class = "calendar-button-style" id = "reflection-button" type="button">Reflections</button>
+        <button class = "calendar-button-style" id = "message-board-button" type="button">Message Board</button>
+        <button class = "calendar-button-style" id = "edit-experience-button" type="button">Edit Experience</button>
+        <button class = "calendar-button-style" id = "delete-experience-button" type="button">Delete Experience</button>
+      </div>
+    </nav>
+
+<!--
+    <header class = "alerts">
+      <h1>Alerts</h1>
+    </header>
+-->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
+    <script src = "scripts/firebase_setup.js" type="text/javascript"></script>
+    <script src = "scripts/portfollio.js" type="text/javascript"></script>
+
+  </body>
+</html>

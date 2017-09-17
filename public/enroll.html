@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Sturgis CAS</title>
+    <link rel="icon" type = "image/png" sizes = "16x16"  href = "cas.png">
+    <link href="CSS/Stylesheets/reset.css" type = "text/css" rel = "stylesheet">
+    <link href="CSS/Stylesheets/enroll.css" type = "text/css" rel = "stylesheet">
+
+  </head>
+  <body>
+
+    <img src = "http://www.sturgischarterschool.com/images/WebLOGO%20336x336.jpg"/>
+
+    <div class = "landing-page-box">
+      <h1>Please Enter a Username and Password to Enroll</h1>
+      <input id = "username-create" type="text" placeholder = "Username">
+      <input id = "email-create" type="text" placeholder = "Email">
+      <input id = "password-create" type="text" placeholder = "Password">
+      <input id = "password-confirm" type="text" placeholder = "Confirm Password">
+      <button id = "create-account">Register</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src = "scripts/firebase_setup.js" type="text/javascript"></script>
+    <script src = "scripts/enroll.js" type = "text/javascript"></script>
+
+  </body>
+</html>
