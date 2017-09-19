@@ -366,3 +366,14 @@ textarea{
   width: 4.5rem;
   height: auto;
 }
+
+.google-login-button{
+  box-shadow: 1px 1px 8px black;
+}
+
+.google-login-box{
+  width: 100%;
+  margin-left: 35%;
+  margin-top: 12%;
+  display: block;
+}

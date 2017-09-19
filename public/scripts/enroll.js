@@ -102,9 +102,13 @@ CREATE_ACCOUNT_BUTTON.addEventListener('click', function(){
         firebase.auth().onAuthStateChanged(function(current_user_profile){
           if(current_user_profile)
           {
+
             var user_ID = current_user_profile.uid;
             populate_user_database(user_ID, common_name, password, user_email);
-            document.location.href = "portfollio.html";
+
+            var link_google = new firebase.auth.GoogleAuthProvider();
+            current_user_profile.linkWithRedirect(link_google);
+
           }
         });
 
@@ -132,4 +136,18 @@ CREATE_ACCOUNT_BUTTON.addEventListener('click', function(){
       });
     }
   }
+});
+
+
+firebase.auth().getRedirectResult().then(function(result){
+  if(result.credential)
+  {
+    var credential = result.credential;
+    var user = result.user;
+
+    document.location.href = "portfollio.html";
+
+  }
+}).catch(function(error) {
+  console.log(error);
 });

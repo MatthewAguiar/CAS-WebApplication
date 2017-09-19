@@ -115,6 +115,7 @@ const NEW_EXPERIENCE_BUTTON = '#add-experience';
 const LOGOUT_BUTTON = "#logout-button";
 const CALENDAR = "#expand-button";
 const MASTER_CALENDAR_NAV = ".master-calendar-nav";
+const LINK_GOOGLE_BUTTON = ".google-login-button";
 const USER_LOGOUT_BUTTON = document.getElementById("logout-button");
 
 const CAS_ROOT_DATABASE = firebase.database().ref();
@@ -127,7 +128,7 @@ class User {
     this.name = name;
     this.email = email;
     this.URL_encoded_email = email.replace("@", "%40");
-    this.user_calendar = '<iframe id = "master-calendar" src="https://calendar.google.com/calendar/embed?src=' + this.URL_encoded_email + '&ctz=America/New_York" frameborder="0" scrolling="no"></iframe>'
+    this.user_calendar = '<iframe id = "master-calendar" src="https://calendar.google.com/calendar/embed?src=' + this.URL_encoded_email + '&ctz=America/New_York" frameborder="0" scrolling="no"></iframe>';
 
     $(LOGOUT_BUTTON).text(this.name);
     $(MASTER_CALENDAR_NAV).append(this.user_calendar);
@@ -150,9 +151,10 @@ class User {
 
   }
 
+
   setup_experience_in_google_calendar(self)
   {
-    
+
   }
 
   master_calendar(self)
@@ -186,8 +188,12 @@ firebase.auth().onAuthStateChanged(function(user){
     });
 
 
-  $(NEW_EXPERIENCE_BUTTON).click(function(){
+    $(NEW_EXPERIENCE_BUTTON).click(function(){
       current_user.initiate_CAS_event(current_user);
+    });
+
+    $(LINK_GOOGLE_BUTTON).click(function(){
+      current_user.link_google_account(current_user);
     });
 
     $(document).on ('click', '#add-experience-button', function () {
