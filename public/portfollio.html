@@ -2,6 +2,8 @@
 <html>
   <head>
 
+    <meta name="google-site-verification" content="Ebb43aJeiQN65WHHO5-6D3T0xAs1ktrnBbSDNdnDn7Y" />
+
     <title>Sturgis CAS</title>
     <link rel="icon" type = "image/png" sizes = "16x16"  href = "cas.png">
     <link href="CSS/Stylesheets/reset.css" type = "text/css" rel = "stylesheet">
@@ -16,8 +18,8 @@
       <img id = "sturgis-icon" src="http://www.sturgischarterschool.com/images/WebLOGO%20336x336.jpg" />
       <img src = "https://managebac.com/images/features/icon_cas.png" />
       <nav>
-        <button id = "add-experience" type="button" name="button">+</button>
-        <button id = "logout-button" type="button" name="button"></button>
+        <button class = "blue-button-style" id = "add-experience" type="button" name="button">+</button>
+        <button class = "blue-button-style" id = "logout-button" type="button" name="button"></button>
       </nav>
     </header>
 
@@ -28,11 +30,11 @@
     <nav class = "master-calendar-nav">
       <div class = "calendar-buttons">
         <button id = "expand-button" type="button">▲</button>
-        <button class = "calendar-button-style" id = "calendar-button" type="button">Calendar</button>
-        <button class = "calendar-button-style" id = "reflection-button" type="button">Reflections</button>
-        <button class = "calendar-button-style" id = "message-board-button" type="button">Message Board</button>
-        <button class = "calendar-button-style" id = "edit-experience-button" type="button">Edit Experience</button>
-        <button class = "calendar-button-style" id = "delete-experience-button" type="button">Delete Experience</button>
+        <button class = "calendar-button-style blue-button-style" id = "calendar-button" type="button">Calendar</button>
+        <button class = "calendar-button-style blue-button-style" id = "reflection-button" type="button">Reflections</button>
+        <button class = "calendar-button-style blue-button-style" id = "message-board-button" type="button">Message Board</button>
+        <button class = "calendar-button-style blue-button-style" id = "edit-experience-button" type="button">Edit Experience</button>
+        <button class = "calendar-button-style blue-button-style" id = "delete-experience-button" type="button">Delete Experience</button>
       </div>
     </nav>
 
@@ -44,6 +46,11 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
     <script src = "scripts/firebase_setup.js" type="text/javascript"></script>
+    <script src = "scripts/google_calendar_boilerplate.js" type="text/javascript"></script>
+    <script async defer src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){};handleClientLoad()"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()">
+    </script>
     <script src = "scripts/portfollio.js" type="text/javascript"></script>
 
   </body>

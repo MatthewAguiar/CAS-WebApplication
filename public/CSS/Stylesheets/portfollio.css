@@ -47,9 +47,8 @@ body{
   box-shadow: 0px 2px 5px black;
 }
 
-#add-experience, #logout-button{
+.blue-button-style{
   border: none;
-  margin-right: 2.5rem;
   padding: 0.7rem;
   border-radius: 4px;
   color: white;
@@ -58,8 +57,12 @@ body{
   box-shadow: 0px 2px 5px black;
 }
 
-#add-experience:hover, #logout-button:hover{
+.blue-button-style:hover{
   background-color: rgb(0, 0, 150);
+}
+
+#add-experience, #logout-button{
+  margin-right: 2.5rem;
 }
 
 #add-experience{
@@ -80,17 +83,6 @@ body{
   padding: 0.75rem;
   border-radius: 4px;
   box-shadow: 0px 2px 5px black;
-}
-
-.new-CAS-form{
-  position: absolute;
-  left: 20%;
-  top: 5%;
-  width: 70%;
-  height: 89%;
-  background-color: rgb(255, 255, 235);
-  border: 1.5px solid black;
-  border-radius: 5px;
 }
 
 .fade-background{
@@ -128,6 +120,14 @@ form{
   height: auto;
   background-color: rgb(255, 255, 235);
   overflow: scroll;
+  position: absolute;
+  left: 15%;
+  top: 5%;
+  width: 70%;
+  height: 89%;
+  background-color: rgb(255, 255, 235);
+  border: 1.5px solid black;
+  border-radius: 5px;
 }
 
 input{
@@ -290,12 +290,24 @@ textarea{
   margin-top: 0.5rem;
 }
 
+.calendar-initiate-data{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.calendar-initiate-data label{
+  margin-left: 1rem;
+}
+
 .date-enter{
   margin-top: 2rem;
+  width: 8rem;
+  height: auto;
 }
 
 #setup-dates-calendar{
-  margin-left: 11rem;
+  margin-left: 13rem;
   margin-bottom: 2rem;
   margin-top: 2rem;
   width: 60%;
@@ -313,7 +325,7 @@ textarea{
   transition: top 1s ease;
 }
 
-#master-calendar{
+.master-calendar{
   width: 55%;
   height: 80%;
   margin: 1.5rem auto;
@@ -345,13 +357,6 @@ textarea{
 
 .calendar-button-style{
   margin-right: 2.5rem;
-  padding: 0.7rem;
-  border-radius: 4px;
-  color: white;
-  background-color: rgb(30, 144, 255);
-  transition: background-color 150ms linear;
-  box-shadow: 0px 2px 5px black;
-  border: none;
 }
 
 .calendar-button-style:hover{
@@ -366,9 +371,10 @@ textarea{
   width: 4.5rem;
   height: auto;
 }
-
+/*
 .google-login-button{
   box-shadow: 1px 1px 8px black;
+  padding: 0.2rem;
 }
 
 .google-login-box{
@@ -376,4 +382,4 @@ textarea{
   margin-left: 35%;
   margin-top: 12%;
   display: block;
-}
+}*/

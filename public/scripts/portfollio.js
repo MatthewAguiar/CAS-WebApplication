@@ -1,5 +1,5 @@
 
-const MAIN_FORM = `
+var MAIN_FORM = `
 
   <div class = fade-background></div>
 
@@ -8,8 +8,8 @@ const MAIN_FORM = `
     <span>New CAS Experience</span>
     <h1>Experience Name:</h1>
     <input id = "experience-name-input" type = "text"></input>
-    <input id = "CAS Project" type = "checkbox"></input>
-    <label for = "CAS Project">CAS Project</label>
+    <input id = "CAS-project" type = "checkbox"></input>
+    <label for = "CAS-project">CAS Project</label>
     <img id = "cas-project-img" src = "cas.png"/>
 
     <h2>CAS Strands<h2>
@@ -43,19 +43,19 @@ const MAIN_FORM = `
     <div class = "supervisor-info">
       <div>
         <h3>Supervisor Name</h3>
-        <input class = "supervisor-input" type = "text"></input>
+        <input id = "supervisor-name" class = "supervisor-input" type = "text"></input>
       </div>
       <div>
         <h3>Supervisor Email</h3>
-        <input class = "supervisor-input" type = "text"></input>
+        <input id = "supervisor-email" class = "supervisor-input" type = "text"></input>
       </div>
       <div>
         <h3>Supervisor Title</h3>
-        <input class = "supervisor-input" type = "text"></input>
+        <input id = "supervisor-title" class = "supervisor-input" type = "text"></input>
       </div>
       <div>
         <h3>Supervisor # (Optional)</h3>
-        <input class = "supervisor-input" type = "text"></input>
+        <input id = "supervisor-phone" class = "supervisor-input" type = "text"></input>
       </div>
     </div>
 
@@ -100,15 +100,40 @@ const MAIN_FORM = `
     </div>
 
     <h2 class = "describe-cas-experience-label">Describe this CAS Experience. Name 2 - 3 goals<h2>
-    <textarea></textarea>
+    <textarea id = "describe-experience-text"></textarea>
 
     <h2 class = "describe-cas-experience-label">How do you plan to address those learning outcomes?<h2>
     <textarea id = "plan-cas-experience-text"></textarea>
 
-    <input class = "date-enter" type = "date">Enter Start Date</input>
+    <div class = "calendar-initiate-data">
+      <div>
+        <label for = "date-start">Starting Date: </label>
+        <input class = "date-enter" id = "date-start" type = "date"></input>
+      </div>
+      <div>
+      <label for = "date-end">Ending Date: </label>
+      <input class = "date-enter" id = "date-end" type = "date"></input>
+      </div>
+    </div>
 
     </form>
 `;
+
+const DATA_FIELD_ARRAY = [
+["Experience Name", "CAS Project", "Creativiy Strand", "Action Strand", "Service Strand", "Ongoing", "School Based", "Community Based", "Individual",
+"Supervisor Name", "Supervisor Email", "Supervisor Title", "Supervisor Phone", "Strength and Growth", "Initiative and Planning", "Collaborative", "Ethics", "Challenge and Skill Building",
+"Commitment and Perserverence", "Global Engagement", "Experience Description", "Experience Plans", "Start Date", "End Date"],
+["#experience-name-input", "#CAS-project", "#creativity",
+"#action", "#service", "#on-going", "#school-based", "#community-based", "#individual", "#supervisor-name", "#supervisor-email", "#supervisor-title", "#supervisor-phone",
+"#strength-and-growth", "#initiative-planning", "#collaborative", "#ethics", "#challenge-skills", "#commitment-perserverence", "#global-engagement", "#describe-experience-text",
+"#plan-cas-experience-text", "#date-start", "#date-end"]
+];
+
+const CAS_BUTTON_CLASS = ".CAS-strand-buttons";
+const CREATIVITY_STRAND = DATA_FIELD_ARRAY[1][2];
+const ACTION_STRAND = DATA_FIELD_ARRAY[1][3];
+const SERVICE_STRAND = DATA_FIELD_ARRAY[1][4];
+
 //Constants used with JQuery.
 const HTML_BODY = 'body'
 const NEW_EXPERIENCE_BUTTON = '#add-experience';
@@ -128,7 +153,7 @@ class User {
     this.name = name;
     this.email = email;
     this.URL_encoded_email = email.replace("@", "%40");
-    this.user_calendar = '<iframe id = "master-calendar" src="https://calendar.google.com/calendar/embed?src=' + this.URL_encoded_email + '&ctz=America/New_York" frameborder="0" scrolling="no"></iframe>';
+    this.user_calendar = '<iframe class = "master-calendar" src="https://calendar.google.com/calendar/embed?src=' + this.URL_encoded_email + '&ctz=America/New_York" frameborder="0" scrolling="no"></iframe>';
 
     $(LOGOUT_BUTTON).text(this.name);
     $(MASTER_CALENDAR_NAV).append(this.user_calendar);
@@ -139,38 +164,94 @@ class User {
 
   }
 
-  initiate_CAS_event(self)
-  {
-
-      $(document).ready(function(){
-
-        $(HTML_BODY).append(MAIN_FORM);
-        $("form").append('<iframe id = "setup-dates-calendar" src="https://calendar.google.com/calendar/embed?src=' + self.URL_encoded_email + '&ctz=America/New_York" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe><button id = "add-experience-button" type = "button">Add Event</button>');
-
-      });
-
-  }
-
-
-  setup_experience_in_google_calendar(self)
-  {
-
-  }
-
-  master_calendar(self)
+  master_calendar()
   {
     $(MASTER_CALENDAR_NAV).toggleClass("expand-calendar");
+  }
 
+  init_CAS_event()
+  {
+
+    $(HTML_BODY).append(MAIN_FORM);
+    $("form").append('<iframe id = "setup-dates-calendar" src="https://calendar.google.com/calendar/embed?src=' + this.URL_encoded_email + '&ctz=America/New_York" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe><button id = "experience-add" class = "blue-button-style" style = "display: block margin-top: 1.5rem" type = "button">Add Event</button>');
+
+  }
+
+  manage_CAS_strands_css(strand, background_color, opacity, shadow)
+  {
+    $(strand).css("background-color", background_color);
+    $(strand).css("opacity", opacity);
+    $(strand).css("box-shadow", shadow);
+  }
+
+  save_new_experience_data(directory, creativity_boolean, action_boolean, service_boolean)
+  {
+
+    if(DATA_FIELD_ARRAY[0].length === DATA_FIELD_ARRAY[1].length)
+    {
+
+      var experience_name = $(DATA_FIELD_ARRAY[1][0]).val();
+
+      for(var i = 0; i < DATA_FIELD_ARRAY[1].length; i++)
+      {
+
+        var field_name = DATA_FIELD_ARRAY[0][i];
+        var input_field = $(DATA_FIELD_ARRAY[1][i]);
+
+        switch(i)
+        {
+          case 2:
+            directory.child(experience_name).child(field_name).set(creativity_boolean);
+            break;
+
+          case 3:
+            directory.child(experience_name).child(field_name).set(action_boolean);
+            break;
+
+          case 4:
+            directory.child(experience_name).child(field_name).set(service_boolean);
+            break;
+
+          default:
+            if((input_field.attr("type") === "checkbox") && !input_field.is(":checked"))
+            {
+              directory.child(experience_name).child(field_name).set("off");
+            }
+            else
+            {
+              directory.child(experience_name).child(field_name).set(input_field.val());
+            }
+
+        }
+
+      }
+    }
+    else
+    {
+      console.log("ERROR!");
+    }
+
+    $(MAIN_FORM).remove();
+
+  }
+
+  init_new_google_calendar_event()
+  {
+    callScriptFunction('add_calendar_event');
   }
 
 }
 
 //Main Code
 
+var creativity_boolean = false;
+var action_boolean = false;
+var service_boolean = false;
+
 firebase.auth().onAuthStateChanged(function(user){
 
   var user_ID = user.uid;
-  var user_directory = CAS_ROOT_DATABASE.child("USERS/Student Branch").child(user_ID);
+  var user_directory = CAS_ROOT_DATABASE.child("USERS/Student Branch/" + user_ID);
 
   user_directory.on('value', function(user_pointer){
 
@@ -183,21 +264,64 @@ firebase.auth().onAuthStateChanged(function(user){
 
     var current_user = new User(username, user_email);
 
-    $(CALENDAR).click(function(){
-      current_user.master_calendar(current_user);
+    $(document).on('click', '#add-event', function() {
+      current_user.init_new_google_calendar_event();
     });
 
+    $(CALENDAR).click(function(){
+      current_user.master_calendar();
+    });
 
     $(NEW_EXPERIENCE_BUTTON).click(function(){
-      current_user.initiate_CAS_event(current_user);
+      current_user.init_CAS_event();
     });
 
-    $(LINK_GOOGLE_BUTTON).click(function(){
-      current_user.link_google_account(current_user);
+    $(document).on('click', CAS_BUTTON_CLASS, function(){
+
+      if($(this).text() === "Creativity")
+      {
+        if(!creativity_boolean)
+        {
+          current_user.manage_CAS_strands_css(CREATIVITY_STRAND, "rgb(255, 0, 0)", "1", "1px 1px 3px black");
+          creativity_boolean = true;
+        }
+        else
+        {
+          current_user.manage_CAS_strands_css(CREATIVITY_STRAND, "", "", "");
+          creativity_boolean = false;
+        }
+      }
+      else if($(this).text() === "Action")
+      {
+        if(!action_boolean)
+        {
+          current_user.manage_CAS_strands_css(ACTION_STRAND, "rgb(0, 0, 255)", "1", "1px 1px 3px black");
+          action_boolean = true;
+        }
+        else
+        {
+          current_user.manage_CAS_strands_css(ACTION_STRAND, "", "", "");
+          action_boolean = false;
+        }
+      }
+      else
+      {
+        if(!service_boolean)
+        {
+          current_user.manage_CAS_strands_css(SERVICE_STRAND, "rgb(0, 200, 0)", "1", "1px 1px 3px black");
+          service_boolean = true;
+        }
+        else
+        {
+          current_user.manage_CAS_strands_css(SERVICE_STRAND, "", "", "");
+          service_boolean = false;
+        }
+      }
+
     });
 
-    $(document).on ('click', '#add-experience-button', function () {
-      current_user.setup_experience_in_google_calendar(current_user);
+    $(document).on('click', '#experience-add', function(){ //Use .on for non original HTML elements!
+      current_user.save_new_experience_data(user_directory.child("Experiences"), creativity_boolean, action_boolean, service_boolean);
     });
 
   });

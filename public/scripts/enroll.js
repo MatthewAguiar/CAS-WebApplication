@@ -145,6 +145,8 @@ firebase.auth().getRedirectResult().then(function(result){
     var credential = result.credential;
     var user = result.user;
 
+    callScriptFunction('create_calendar');
+
     document.location.href = "portfollio.html";
 
   }
