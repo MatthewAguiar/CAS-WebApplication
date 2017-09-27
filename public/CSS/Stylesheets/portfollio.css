@@ -183,17 +183,17 @@ h2{
 }
 
 #action{
-  background-color: rgb(135, 206, 250);
+  background-color: rgb(144, 238, 144);
 }
 
 #action:hover{
-  background-color: rgb(0, 0, 255);
+
   opacity: 1;
   box-shadow: 1px 1px 3px black;
 }
 
 #service{
-  background-color: rgb(144, 238, 144);
+  background-color: rgb(135, 206, 250);
 }
 
 #service:hover{
@@ -371,6 +371,20 @@ textarea{
   width: 4.5rem;
   height: auto;
 }
+
+.experience-box{
+  margin-top: 2rem;
+  margin-left: 2rem;
+  width: 50%;
+  height: 5rem;
+  padding: 1rem;
+  border-radius: 3px;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  /*box-shadow: 0px 0px 3px rgb(20, 20, 20);*/
+}
+
 /*
 .google-login-button{
   box-shadow: 1px 1px 8px black;

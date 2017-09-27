@@ -15,7 +15,7 @@
   <body>
 
     <header class = "main-banner">
-      <img id = "sturgis-icon" src="http://www.sturgischarterschool.com/images/WebLOGO%20336x336.jpg" />
+      <img id = "sturgis-icon" src="https://upload.wikimedia.org/wikipedia/en/4/40/Sturgis_Charter_Public_School_%28logo%29.png" />
       <img src = "https://managebac.com/images/features/icon_cas.png" />
       <nav>
         <button class = "blue-button-style" id = "add-experience" type="button" name="button">+</button>
@@ -51,7 +51,128 @@
       onload="this.onload=function(){};handleClientLoad()"
       onreadystatechange="if (this.readyState === 'complete') this.onload()">
     </script>
-    <script src = "scripts/portfollio.js" type="text/javascript"></script>
+    <script src = "scripts/portfollio.js" type="text/javascript">
+    
+    var MAIN_FORM = `
+
+      <div class = fade-background></div>
+
+      <form class = "new-CAS-form">
+
+        <span>New CAS Experience</span>
+        <h1>Experience Name:</h1>
+        <input id = "experience-name-input" type = "text"></input>
+        <input id = "CAS-project" type = "checkbox"></input>
+        <label for = "CAS-project">CAS Project</label>
+        <img id = "cas-project-img" src = "cas.png"/>
+
+        <h2>CAS Strands<h2>
+        <div class = "CAS-strand-box">
+          <button class = "CAS-strand-buttons" id = "creativity" type = "button"><em class = "big-letters">C</em>reativity</button>
+          <button class = "CAS-strand-buttons" id = "action" type = "button"><em class = "big-letters">A</em>ction</button>
+          <button class = "CAS-strand-buttons" id = "service" type = "button"><em class = "big-letters">S</em>ervice</button>
+        </div>
+
+        <h2 id = "approach-field">Approaches</h2>
+        <div class = "cas-approach-box">
+          <div>
+            <input id = "on-going" type = "checkbox"></input>
+            <label class = "standard-approach-class" id = "on-going-label" for = "on-going">Ongoing</label>
+          </div>
+          <div>
+            <input id = "school-based" type = "checkbox"></input>
+            <label class = "standard-approach-class" id = "school-based-label" for = "school-based">School-based</label>
+          </div>
+          <div>
+            <input id = "community-based" type = "checkbox"></input>
+            <label class = "standard-approach-class" id = "community-based-label" for = "community-based">Community-based</label>
+          </div>
+          <div>
+            <input id = "individual" type = "checkbox"></input>
+            <label class = "standard-approach-class" id = "individual-label" for = "individual">Individual</label>
+          </div>
+        </div>
+
+        <h2 id = "supervisor-field">Supervisor Info<h2>
+        <div class = "supervisor-info">
+          <div>
+            <h3>Supervisor Name</h3>
+            <input id = "supervisor-name" class = "supervisor-input" type = "text"></input>
+          </div>
+          <div>
+            <h3>Supervisor Email</h3>
+            <input id = "supervisor-email" class = "supervisor-input" type = "text"></input>
+          </div>
+          <div>
+            <h3>Supervisor Title</h3>
+            <input id = "supervisor-title" class = "supervisor-input" type = "text"></input>
+          </div>
+          <div>
+            <h3>Supervisor # (Optional)</h3>
+            <input id = "supervisor-phone" class = "supervisor-input" type = "text"></input>
+          </div>
+        </div>
+
+        <h2 id = "learning-outcomes-label">Learning Outcomes (Choose all that apply)</h2>
+        <div class = "learning-outcomes-box">
+          <div>
+            <ul class = "learning-outcomes">
+              <li>
+                <input id = "strength-and-growth" type = "checkbox"></input>
+                <label class = "standard-approach-class" for = "strength-and-growth">Strength & Growth</label>
+              </li>
+              <li>
+                <input id = "initiative-planning" type = "checkbox"></input>
+                <label class = "standard-approach-class" for = "initiative-planning">Initiative & Planning</label>
+              </li>
+              <li>
+                <input id = "collaborative" type = "checkbox"></input>
+                <label class = "standard-approach-class" for = "collaborative">Collaboration Skills</label>
+              </li>
+              <li>
+                <input id = "ethics" type = "checkbox"></input>
+                <label class = "standard-approach-class" for = "ethics">Ethics of Choices & Actions</label>
+              </li>
+            <ul>
+          </div>
+          <div>
+            <ul class = "learning-outcomes">
+              <li>
+                <input id = "challenge-skills" type = "checkbox"></input>
+                <label class = "standard-approach-class" for = "challenge-skills">Overcoming Challenges & Developing Skills</label>
+              </li>
+              <li>
+                <input id = "commitment-perserverence" type = "checkbox"></input>
+                <label class = "standard-approach-class" for = "commitment-perserverence">Commitment & Perserverence</label>
+              </li>
+              <li>
+                <input id = "global-engagement" type = "checkbox"></input>
+                <label class = "standard-approach-class" for = "global-engagement">Global Engagement</label>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <h2 class = "describe-cas-experience-label">Describe this CAS Experience. Name 2 - 3 goals<h2>
+        <textarea id = "describe-experience-text"></textarea>
+
+        <h2 class = "describe-cas-experience-label">How do you plan to address those learning outcomes?<h2>
+        <textarea id = "plan-cas-experience-text"></textarea>
+
+        <div class = "calendar-initiate-data">
+          <div>
+            <label for = "date-start">Starting Date: </label>
+            <input class = "date-enter" id = "date-start" type = "date"></input>
+          </div>
+          <div>
+          <label for = "date-end">Ending Date: </label>
+          <input class = "date-enter" id = "date-end" type = "date"></input>
+          </div>
+        </div>
+
+        </form>
+    `;
+    </script>
 
   </body>
 </html>

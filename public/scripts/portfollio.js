@@ -1,140 +1,36 @@
 
-var MAIN_FORM = `
-
-  <div class = fade-background></div>
-
-  <form class = "new-CAS-form">
-
-    <span>New CAS Experience</span>
-    <h1>Experience Name:</h1>
-    <input id = "experience-name-input" type = "text"></input>
-    <input id = "CAS-project" type = "checkbox"></input>
-    <label for = "CAS-project">CAS Project</label>
-    <img id = "cas-project-img" src = "cas.png"/>
-
-    <h2>CAS Strands<h2>
-    <div class = "CAS-strand-box">
-      <button class = "CAS-strand-buttons" id = "creativity" type = "button"><em class = "big-letters">C</em>reativity</button>
-      <button class = "CAS-strand-buttons" id = "action" type = "button"><em class = "big-letters">A</em>ction</button>
-      <button class = "CAS-strand-buttons" id = "service" type = "button"><em class = "big-letters">S</em>ervice</button>
-    </div>
-
-    <h2 id = "approach-field">Approaches</h2>
-    <div class = "cas-approach-box">
-      <div>
-        <input id = "on-going" type = "checkbox"></input>
-        <label class = "standard-approach-class" id = "on-going-label" for = "on-going">Ongoing</label>
-      </div>
-      <div>
-        <input id = "school-based" type = "checkbox"></input>
-        <label class = "standard-approach-class" id = "school-based-label" for = "school-based">School-based</label>
-      </div>
-      <div>
-        <input id = "community-based" type = "checkbox"></input>
-        <label class = "standard-approach-class" id = "community-based-label" for = "community-based">Community-based</label>
-      </div>
-      <div>
-        <input id = "individual" type = "checkbox"></input>
-        <label class = "standard-approach-class" id = "individual-label" for = "individual">Individual</label>
-      </div>
-    </div>
-
-    <h2 id = "supervisor-field">Supervisor Info<h2>
-    <div class = "supervisor-info">
-      <div>
-        <h3>Supervisor Name</h3>
-        <input id = "supervisor-name" class = "supervisor-input" type = "text"></input>
-      </div>
-      <div>
-        <h3>Supervisor Email</h3>
-        <input id = "supervisor-email" class = "supervisor-input" type = "text"></input>
-      </div>
-      <div>
-        <h3>Supervisor Title</h3>
-        <input id = "supervisor-title" class = "supervisor-input" type = "text"></input>
-      </div>
-      <div>
-        <h3>Supervisor # (Optional)</h3>
-        <input id = "supervisor-phone" class = "supervisor-input" type = "text"></input>
-      </div>
-    </div>
-
-    <h2 id = "learning-outcomes-label">Learning Outcomes (Choose all that apply)</h2>
-    <div class = "learning-outcomes-box">
-      <div>
-        <ul class = "learning-outcomes">
-          <li>
-            <input id = "strength-and-growth" type = "checkbox"></input>
-            <label class = "standard-approach-class" for = "strength-and-growth">Strength & Growth</label>
-          </li>
-          <li>
-            <input id = "initiative-planning" type = "checkbox"></input>
-            <label class = "standard-approach-class" for = "initiative-planning">Initiative & Planning</label>
-          </li>
-          <li>
-            <input id = "collaborative" type = "checkbox"></input>
-            <label class = "standard-approach-class" for = "collaborative">Collaboration Skills</label>
-          </li>
-          <li>
-            <input id = "ethics" type = "checkbox"></input>
-            <label class = "standard-approach-class" for = "ethics">Ethics of Choices & Actions</label>
-          </li>
-        <ul>
-      </div>
-      <div>
-        <ul class = "learning-outcomes">
-          <li>
-            <input id = "challenge-skills" type = "checkbox"></input>
-            <label class = "standard-approach-class" for = "challenge-skills">Overcoming Challenges & Developing Skills</label>
-          </li>
-          <li>
-            <input id = "commitment-perserverence" type = "checkbox"></input>
-            <label class = "standard-approach-class" for = "commitment-perserverence">Commitment & Perserverence</label>
-          </li>
-          <li>
-            <input id = "global-engagement" type = "checkbox"></input>
-            <label class = "standard-approach-class" for = "global-engagement">Global Engagement</label>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <h2 class = "describe-cas-experience-label">Describe this CAS Experience. Name 2 - 3 goals<h2>
-    <textarea id = "describe-experience-text"></textarea>
-
-    <h2 class = "describe-cas-experience-label">How do you plan to address those learning outcomes?<h2>
-    <textarea id = "plan-cas-experience-text"></textarea>
-
-    <div class = "calendar-initiate-data">
-      <div>
-        <label for = "date-start">Starting Date: </label>
-        <input class = "date-enter" id = "date-start" type = "date"></input>
-      </div>
-      <div>
-      <label for = "date-end">Ending Date: </label>
-      <input class = "date-enter" id = "date-end" type = "date"></input>
-      </div>
-    </div>
-
-    </form>
-`;
+/*
+The three constants below are:
+1) In charge of storing the name and corresponding rgb values of the colors that will be randomly assigned to each experience box.
+2) Saves each CAS experience form element by id and also save the corresponding Firbase database key.
+*/
+const EXPERIENCE_BOX_COLORS = [
+  ["Blue", "Green", "Yellow", "Red", "Orange", "Purple"],
+  ["rgb(32,178,170)", "rgb(125, 225, 125)", "rgb(255, 255, 102)", "rgb(250,128,114)", "rgb(255,165,0)", "rgb(106,90,205)"]
+];
 
 const DATA_FIELD_ARRAY = [
-["Experience Name", "CAS Project", "Creativiy Strand", "Action Strand", "Service Strand", "Ongoing", "School Based", "Community Based", "Individual",
-"Supervisor Name", "Supervisor Email", "Supervisor Title", "Supervisor Phone", "Strength and Growth", "Initiative and Planning", "Collaborative", "Ethics", "Challenge and Skill Building",
-"Commitment and Perserverence", "Global Engagement", "Experience Description", "Experience Plans", "Start Date", "End Date"],
-["#experience-name-input", "#CAS-project", "#creativity",
-"#action", "#service", "#on-going", "#school-based", "#community-based", "#individual", "#supervisor-name", "#supervisor-email", "#supervisor-title", "#supervisor-phone",
-"#strength-and-growth", "#initiative-planning", "#collaborative", "#ethics", "#challenge-skills", "#commitment-perserverence", "#global-engagement", "#describe-experience-text",
+["Experience Name", "CAS Project", "Creativity Strand", "Action Strand", "Service Strand", "Ongoing", "School Based", "Community Based", "Individual",
+"Supervisor Name", "Supervisor Email", "Supervisor Title", "Supervisor Phone", "Strength and Growth", "Initiative and Planning", "Collaborative", "Ethics",
+"Challenge and Skill Building", "Commitment and Perserverence", "Global Engagement", "Experience Description", "Experience Plans", "Start Date", "End Date"],
+
+["#experience-name-input", "#CAS-project", "#creativity","#action", "#service", "#on-going", "#school-based", "#community-based", "#individual",
+"#supervisor-name", "#supervisor-email", "#supervisor-title", "#supervisor-phone", "#strength-and-growth", "#initiative-planning", "#collaborative",
+"#ethics", "#challenge-skills", "#commitment-perserverence", "#global-engagement", "#describe-experience-text",
 "#plan-cas-experience-text", "#date-start", "#date-end"]
 ];
 
+/*
+The four constants below:
+1) Saves the class that all 3 CAS buttons will have in the new CAS experience form.
+2) Creates 3 more constants that save the id of each CAS strand contained in the array constant above.
+*/
 const CAS_BUTTON_CLASS = ".CAS-strand-buttons";
 const CREATIVITY_STRAND = DATA_FIELD_ARRAY[1][2];
 const ACTION_STRAND = DATA_FIELD_ARRAY[1][3];
 const SERVICE_STRAND = DATA_FIELD_ARRAY[1][4];
 
-//Constants used with JQuery.
+
 const HTML_BODY = 'body'
 const NEW_EXPERIENCE_BUTTON = '#add-experience';
 const LOGOUT_BUTTON = "#logout-button";
@@ -153,7 +49,7 @@ class User {
     this.name = name;
     this.email = email;
     this.URL_encoded_email = email.replace("@", "%40");
-    this.user_calendar = '<iframe class = "master-calendar" src="https://calendar.google.com/calendar/embed?src=' + this.URL_encoded_email + '&ctz=America/New_York" frameborder="0" scrolling="no"></iframe>';
+    this.user_calendar = '<iframe class = "master-calendar" src = "https://calendar.google.com/calendar/embed?src=' + this.URL_encoded_email + '&ctz=America/New_York" frameborder="0" scrolling="no"></iframe>';
 
     $(LOGOUT_BUTTON).text(this.name);
     $(MASTER_CALENDAR_NAV).append(this.user_calendar);
@@ -161,6 +57,116 @@ class User {
     console.log(this.name);
     console.log(this.email);
     console.log(this.URL_encoded_email);
+
+  }
+
+  draw_experience_box(experience_dictionary)
+  {
+    for(var experience in experience_dictionary)
+    {
+      var color = experience_dictionary[experience]["Box Color"];
+
+      if(EXPERIENCE_BOX_COLORS[0].includes(color))
+      {
+
+        var color_index = EXPERIENCE_BOX_COLORS[0].indexOf(color);
+        var rgb_color = EXPERIENCE_BOX_COLORS[1][color_index];
+
+        var new_experience_box = '<nav class = "experience-box" id = "default"></nav>';
+
+        $(HTML_BODY).append(new_experience_box);
+
+        var change_default_id = document.getElementById("default").id = experience;
+        var new_jQuery_box_id = '#' + change_default_id;
+
+        $(new_jQuery_box_id).css("background-color", rgb_color);
+
+        console.log(experience_dictionary[experience]["Creativity Strand"]);
+
+        this.fill_experience_box(experience_dictionary[experience], new_jQuery_box_id, experience);
+
+      }
+    }
+  }
+
+  fill_experience_box(experience_data, box_id, experience)
+  {
+
+    var default_experience_elements = [
+
+      ['<h6 id = "experience-name"></h6>', '<img id = "CAS-strand-icon" src = "" />', '<img id = "CAS-project-icon" src = "" />',
+      '<p id = "experience-description"></p>'],
+
+      [experience_data["Creativity Strand"], experience_data["Action Strand"], experience_data["Service Strand"],
+      experience_data["CAS Project"], experience_data["Experience Description"]]
+    ];
+
+    $(box_id).append(default_experience_elements[0][0]);
+    var new_experience_name_id = document.getElementById("experience-name").id = "experience-name-" + experience;
+    var new_jQuery_name_id = "#" + new_experience_name_id;
+    $(new_jQuery_name_id).text(experience);
+
+    $(box_id).append(default_experience_elements[0][1]);
+    var new_experience_CAS_strand_icon = document.getElementById("CAS-strand-icon").id = experience + "-CAS-strand-icon";
+    var new_jQuery_CAS_icon_id = "#" + new_experience_CAS_strand_icon;
+
+    var resulting_decimal_number = this.determine_strands([default_experience_elements[1][0], default_experience_elements[1][1], default_experience_elements[1][2]]);
+
+    switch(resulting_decimal_number)
+    {
+      case 4:
+        $(new_jQuery_CAS_icon_id).attr("src", "creativity_strand.png");
+        break;
+
+      case 2:
+        $(new_jQuery_CAS_icon_id).attr("src", "action_strand.png");
+        break;
+
+      case 1:
+        $(new_jQuery_CAS_icon_id).attr("src", "service_strand.png");
+        break;
+
+      case 6:
+        $(new_jQuery_CAS_icon_id).attr("src", "creativity_and_action_strand.png");
+        break;
+
+      case 3:
+        $(new_jQuery_CAS_icon_id).attr("src", "action_and_service_strand.png");
+        break;
+
+      case 5:
+        $(new_jQuery_CAS_icon_id).attr("src", "creativity_and_service_strand.png");
+        break;
+
+      case 7:
+        $(new_jQuery_CAS_icon_id).attr("src", "full_CAS_strand.png");
+        break;
+
+      default:
+        alert("Enter a Strand!");
+
+    }
+
+    $(new_jQuery_CAS_icon_id).css("display", "inline");
+    $(new_jQuery_CAS_icon_id).css("width", "2.8rem");
+    $(new_jQuery_CAS_icon_id).css("height", "auto");
+
+  }
+
+  determine_strands(CAS_strand_array)
+  {
+    var binary = [4, 2, 1];
+    var decimal_number = 0;
+
+    for(var i = 0; i < CAS_strand_array.length; i++)
+    {
+      if(CAS_strand_array[i])
+      {
+        decimal_number += binary[i];
+      }
+    }
+
+    return decimal_number;
 
   }
 
@@ -225,6 +231,10 @@ class User {
         }
 
       }
+
+      var random_color_index = Math.floor(Math.random() * 6);
+      directory.child(experience_name).child("Box Color").set(EXPERIENCE_BOX_COLORS[0][random_color_index]);
+
     }
     else
     {
@@ -243,7 +253,6 @@ class User {
 }
 
 //Main Code
-
 var creativity_boolean = false;
 var action_boolean = false;
 var service_boolean = false;
@@ -257,12 +266,19 @@ firebase.auth().onAuthStateChanged(function(user){
 
     var user_data = user_pointer.val();
 
+    console.log(user_data);
+
     var username = user_data["Name"];
     var user_email = user_data["Email"];
 
-    console.log(user_data);
-
     var current_user = new User(username, user_email);
+
+    var has_experiences = user_pointer.hasChild("Experiences");
+    if(has_experiences)
+    {
+      var experience_dictionary = user_data["Experiences"];
+      current_user.draw_experience_box(experience_dictionary);
+    }
 
     $(document).on('click', '#add-event', function() {
       current_user.init_new_google_calendar_event();
@@ -322,6 +338,7 @@ firebase.auth().onAuthStateChanged(function(user){
 
     $(document).on('click', '#experience-add', function(){ //Use .on for non original HTML elements!
       current_user.save_new_experience_data(user_directory.child("Experiences"), creativity_boolean, action_boolean, service_boolean);
+      document.location.href = 'portfollio.html';
     });
 
   });
