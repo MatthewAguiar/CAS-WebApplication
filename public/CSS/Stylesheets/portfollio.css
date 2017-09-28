@@ -141,7 +141,7 @@ label{
 #cas-project-img{
   position: absolute;
   top: 6.8rem;
-  left: 33.1rem;
+  left: 35.5rem;
   width: 32px;
   height: auto;
 }
@@ -187,7 +187,7 @@ h2{
 }
 
 #action:hover{
-
+  background-color: rgb(0, 200, 0);
   opacity: 1;
   box-shadow: 1px 1px 3px black;
 }
@@ -197,7 +197,7 @@ h2{
 }
 
 #service:hover{
-  background-color: rgb(0, 200, 0);
+  background-color: rgb(0, 0, 255);
   opacity: 1;
   box-shadow: 1px 1px 3px black;
 }
@@ -301,6 +301,7 @@ textarea{
 }
 
 .date-enter{
+  margin-right: 4rem;
   margin-top: 2rem;
   width: 8rem;
   height: auto;
@@ -313,6 +314,12 @@ textarea{
   width: 60%;
   height: 75%;
   border: 1px solid black;
+}
+
+#experience-add{
+  display: block;
+  margin-top: 2rem;
+  margin-left: 15rem;
 }
 
 .master-calendar-nav{
@@ -376,13 +383,13 @@ textarea{
   margin-top: 2rem;
   margin-left: 2rem;
   width: 50%;
-  height: 5rem;
+  height: 8rem;
   padding: 1rem;
   border-radius: 3px;
-  border: 1px solid black;
+  /*border: 1px solid black;*/
   display: flex;
-  flex-direction: column;
-  /*box-shadow: 0px 0px 3px rgb(20, 20, 20);*/
+  /*flex-direction: column;*/
+  box-shadow: 0px 0px 3px rgb(0, 0, 0);
 }
 
 /*
