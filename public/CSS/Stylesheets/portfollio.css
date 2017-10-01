@@ -382,14 +382,26 @@ textarea{
 .experience-box{
   margin-top: 2rem;
   margin-left: 2rem;
-  width: 50%;
-  height: 8rem;
+  width: 93%;
+  height: 15rem;
   padding: 1rem;
   border-radius: 3px;
   /*border: 1px solid black;*/
   display: flex;
-  /*flex-direction: column;*/
+  flex-direction: column;
   box-shadow: 0px 0px 3px rgb(0, 0, 0);
+  transition: height 1s ease;
+}
+
+.experience-name-style{
+  font-family: 'Lato';
+  font-weight: 1000;
+  font-size: 1.3rem;
+}
+
+.box-style h6{
+  font-family: "Quicksand";
+  font-weight: 700;
 }
 
 /*
