@@ -58,10 +58,6 @@ class User {
     $(LOGOUT_BUTTON).text(this.name);
     $(MASTER_CALENDAR_NAV).append(this.user_calendar);
 
-    console.log(this.name);
-    console.log(this.email);
-    console.log(this.URL_encoded_email);
-
   }
 
   CAS_experience_form()
@@ -105,12 +101,15 @@ class User {
             directory.child(experience_name).child(field_name).set(service_boolean);
             break;
 
-          case 21:
-              var google_calendar_formatted_start_date = this.format_calendar(input_field.val());
-              alert(google_calendar_formatted_start_date);
-              directory.child(experience_name).child(field_name).set(google_calendar_formatted_start_date);
-              break;
+          case 22:
+            var google_calendar_formatted_start_date = this.format_calendar(input_field.val());
+            directory.child(experience_name).child(field_name).set(google_calendar_formatted_start_date);
+            break;
 
+          case 23:
+            var google_calendar_formatted_end_date = this.format_calendar(input_field.val());
+            directory.child(experience_name).child(field_name).set(google_calendar_formatted_end_date);
+            break;
 
           default:
             if((input_field.attr("type") === "checkbox") && !input_field.is(":checked"))
@@ -125,6 +124,8 @@ class User {
         }
 
       }
+
+      callScriptFunction('add_calendar_event', [experience_name, google_calendar_formatted_start_date, google_calendar_formatted_end_date]);
 
       var random_color_index = Math.floor(Math.random() * 6);
       directory.child(experience_name).child("Box Color").set(EXPERIENCE_BOX_COLORS[0][random_color_index]);
@@ -141,15 +142,17 @@ class User {
 
   format_calendar(calendar_string)
   {
-    var strip_white_space = calendar_string.split(" ");
-    var first_dash = strip_white_space.indexOf("-");
-    var year = strip_white_space.substring(0, first_dash);
-    strip_white_space.split(year + "-");
-    var second_dash = strip_white_space.indexOf("-");
-    var month = strip_white_space.substring(0, second_dash);
-    strip_white_space.split(month + "-");
-    var date = strip_white_space;
-    return year, month, date;
+
+    var new_array = [];
+    var calendar_date_array = calendar_string.split("-");
+    var month_array = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var month_index = calendar_date_array[1] - 1;
+    calendar_date_array[1] = month_array[month_index];
+    new_array.push(calendar_date_array[1], calendar_date_array[2], calendar_date_array[0]);
+    var add_commas = new_array.join(", ");
+    var formatted_date = add_commas.replace(",", "");
+    return formatted_date;
+
   }
 
   master_calendar()
@@ -157,18 +160,21 @@ class User {
     $(MASTER_CALENDAR_NAV).toggleClass("expand-calendar");
   }
 
-  init_new_google_calendar_event()
-  {
-    callScriptFunction('add_calendar_event');
-  }
-
   draw_experience_box(list_of_experiences)//experience_dictionary)
   {
+
+    var default_experience_elements = ['<h6 class = "experience-name-style" id = "experience-name"></h6>', '<img id = "CAS-strand-icon" src = "" />',
+    '<img id = "CAS-project-icon" src = "" />', '<p id = "learning-outcomes-portfollio"></p>', '<p id = "experience-description"></p>', '<ol id = "approach-list"></ol>',
+    '<h6>Approaches:</h6>', '<ol id = "learning-outcomes-list"></ol>', '<h6>Learning Outcomes:</h6>', '<div class = "description-and-goals" id = "default-description-and-goals"></div>',
+    '<h6>Experience Description:</h6>', '<h6>Goals:</h6>'];
+
     for(var experience_name in list_of_experiences)
     {
       var experience_data = list_of_experiences[experience_name];
-      var box_color = list_of_experiences[experience_name]["Box Color"];
+      var box_color = experience_data["Box Color"];
       var HTML_formatted_experience_name = experience_name.replace(/ /g, "-");
+
+      console.log(list_of_experiences[experience_name]["Start Date"]);
 
       if(EXPERIENCE_BOX_COLORS[0].includes(box_color))
       {
@@ -176,80 +182,24 @@ class User {
         var color_index = EXPERIENCE_BOX_COLORS[0].indexOf(box_color);
         var rgb_color = EXPERIENCE_BOX_COLORS[1][color_index];
 
-        var new_HTML_experience_box = '<nav class = "experience-box" id = "default"></nav>';
-        $(HTML_BODY).append(new_HTML_experience_box);
+        var box_id = this.setup_experience_box(rgb_color, HTML_formatted_experience_name);
 
-        var box_id = this.generate_unique_HTML_id("default", HTML_formatted_experience_name);
+        var inner_content_container = this.insert_content_container_in_box(box_id, HTML_formatted_experience_name);
 
-        $(box_id).css("background-color", rgb_color);
-        $(box_id).append('<div class = "box-style" id = "default-name-and-status"></div>');
+        this.add_experience_name_to_box(inner_content_container, default_experience_elements[0], HTML_formatted_experience_name, experience_name);
 
-        var inner_content_container_id = this.generate_unique_HTML_id("default-name-and-status", HTML_formatted_experience_name + "-name-and-status");
+        this.add_CAS_strands_to_box(inner_content_container, default_experience_elements[1], HTML_formatted_experience_name, [
+        experience_data["Creativity Strand"], experience_data["Action Strand"], experience_data["Service Strand"]
+        ]);
 
-        $(inner_content_container_id).css("width", "100%");
-        $(inner_content_container_id).css("display", "flex");
+        this.add_CAS_project_to_box(experience_data["CAS Project"], inner_content_container, default_experience_elements[2], HTML_formatted_experience_name);
 
-        var default_experience_elements = ['<h6 class = "experience-name-style" id = "experience-name"></h6>', '<img id = "CAS-strand-icon" src = "" />',
-        '<img id = "CAS-project-icon" src = "" />', '<p id = "learning-outcomes-portfollio"></p>', '<p id = "experience-description"></p>'];
+        this.add_approaches_list_to_box(inner_content_container, default_experience_elements[5], HTML_formatted_experience_name, default_experience_elements[6], experience_data);
 
-        $(inner_content_container_id).append(default_experience_elements[0]);
-        var experience_title_id = this.generate_unique_HTML_id("experience-name", HTML_formatted_experience_name + "-title");
-        $(experience_title_id).text(experience_name);
+        this.add_learning_outcomes_list_to_box(inner_content_container, default_experience_elements[7], HTML_formatted_experience_name, default_experience_elements[8], experience_data);
 
-        $(inner_content_container_id).append(default_experience_elements[1]);
-        var CAS_icon_id = this.generate_unique_HTML_id("CAS-strand-icon", HTML_formatted_experience_name + "CAS-strand-icon");
-        var image_src_name = this.determine_strand_image([experience_data["Creativity Strand"], experience_data["Action Strand"], experience_data["Service Strand"]]);
-        $(CAS_icon_id).attr("src", "creativity_strand.png");
-        $(CAS_icon_id).css("width", "1.8rem");
-        $(CAS_icon_id).css("height", "1.7rem");
-        $(CAS_icon_id).css("margin-left", "1.5rem");
-
-        if(experience_data["CAS Project"] === "on")
-        {
-          $(inner_content_container_id).append(default_experience_elements[2]);
-          var CAS_project_id = this.generate_unique_HTML_id("CAS-project-icon", HTML_formatted_experience_name + "-CAS-project-icon");
-          $(CAS_project_id).attr("src", "cas.png");
-          $(CAS_project_id).css("width", "1.7rem");
-          $(CAS_project_id).css("height", "1.7rem");
-          $(CAS_project_id).css("margin-left", "1.5rem");
-        }
-
-        $(inner_content_container_id).append('<ul id = "approach-list"></ul>');
-        var approaches_list_id = this.generate_unique_HTML_id("approach-list", HTML_formatted_experience_name + "-approach-list");
-        $(approaches_list_id).append("<h6>Approaches:</h6>").css("margin-left", "1.8rem");
-
-        for(var i = 5; i < 9; i++)
-        {
-          if(experience_data[DATA_FIELD_ARRAY[0][i]] === "on")
-          {
-            $(approaches_list_id).append("<li><h6>" + (i - 4).toString() + ") " + DATA_FIELD_ARRAY[0][i] + "</h6></li>");
-          }
-        }
-
-        $(approaches_list_id + " li").css("margin-top", "1rem");
-
-
-        $(inner_content_container_id).append('<ul id = "learning-outcomes-list"></ul>');
-        var learning_outcomes_list_id = this.generate_unique_HTML_id("learning-outcomes-list", HTML_formatted_experience_name + "-outcome-list");
-        $(learning_outcomes_list_id).append("<h6>Learning Outcomes:</h6>").css("margin-left", "1.8rem");
-
-        for(var i = 13; i < 20; i++)
-        {
-          if(experience_data[DATA_FIELD_ARRAY[0][i]] === "on")
-          {
-            $(learning_outcomes_list_id).append("<li><h6>" + (i - 12).toString() + ") " + DATA_FIELD_ARRAY[0][i] + "</h6></li>");
-          }
-        }
-
-        $(learning_outcomes_list_id + " li").css("margin-top", "1rem");
-
-        $(box_id).append('<div class = "description-and-goals" id = "default-description-and-goals"></div>');
-        var description_id = this.generate_unique_HTML_id("default-description-and-goals", HTML_formatted_experience_name + "-description-and-goals");
-        $(description_id).css("display", "none");
-        $(description_id).append('<h6>Experience Description:</h6>');
-        $(description_id).append('<p>' + experience_data["Experience Description"] + '/<p>');
-        $(description_id).append('<h6>Goals:</h6>');
-        $(description_id).append('<p>' + experience_data["Experience Plans"] + '</p>');
+        var description_id = this.add_description_and_goals_paragraphs_after_box_expands(box_id, default_experience_elements[9], HTML_formatted_experience_name,
+        default_experience_elements[10], '<p>' + experience_data["Experience Description"] + '/<p>', default_experience_elements[11], '<p>' + experience_data["Experience Plans"] + '</p>');
 
       }
 
@@ -278,6 +228,119 @@ class User {
 
   }
 
+  setup_experience_box(rgb_color, HTML_formatted_experience_name)
+  {
+
+    var new_HTML_experience_box = '<nav class = "experience-box" id = "default"></nav>';
+    $(HTML_BODY).append(new_HTML_experience_box);
+
+    var box_id = this.generate_unique_HTML_id("default", HTML_formatted_experience_name);
+
+    $(box_id).css("background-color", rgb_color);
+
+    return box_id;
+
+  }
+
+  insert_content_container_in_box(box_id, HTML_formatted_experience_name)
+  {
+
+    $(box_id).append('<div class = "box-style" id = "default-name-and-status"></div>');
+    var inner_content_container_id = this.generate_unique_HTML_id("default-name-and-status", HTML_formatted_experience_name + "-name-and-status");
+
+    $(inner_content_container_id).css("width", "100%");
+    $(inner_content_container_id).css("display", "flex");
+
+    return inner_content_container_id;
+
+  }
+
+  add_experience_name_to_box(inner_content_container, h6_element, HTML_formatted_experience_name, experience_name)
+  {
+
+    $(inner_content_container).append(h6_element);
+    var experience_title_id = this.generate_unique_HTML_id("experience-name", HTML_formatted_experience_name + "-title");
+    $(experience_title_id).text(experience_name);
+
+  }
+
+  add_CAS_strands_to_box(inner_content_container, image_tag, HTML_formatted_experience_name, CAS_strands_boolean_values)
+  {
+    $(inner_content_container).append(image_tag);
+
+    var CAS_icon_id = this.generate_unique_HTML_id("CAS-strand-icon", HTML_formatted_experience_name + "CAS-strand-icon");
+    var image_src_name = this.determine_strand_image(CAS_strands_boolean_values);
+
+    $(CAS_icon_id).attr("src", "creativity_strand.png");
+    $(CAS_icon_id).css("width", "1.8rem");
+    $(CAS_icon_id).css("height", "1.7rem");
+    $(CAS_icon_id).css("margin-left", "1.5rem");
+  }
+
+  add_CAS_project_to_box(CAS_project_boolean, inner_content_container, image_tag, HTML_formatted_experience_name)
+  {
+
+    if(CAS_project_boolean === "on")
+    {
+
+      $(inner_content_container).append(image_tag);
+      var CAS_project_id = this.generate_unique_HTML_id("CAS-project-icon", HTML_formatted_experience_name + "-CAS-project-icon");
+      $(CAS_project_id).attr("src", "cas.png");
+      $(CAS_project_id).css("width", "1.7rem");
+      $(CAS_project_id).css("height", "1.7rem");
+      $(CAS_project_id).css("margin-left", "1.5rem");
+
+    }
+
+  }
+
+  add_approaches_list_to_box(inner_content_container, ordered_list, HTML_formatted_experience_name, top_label, experience_data)
+  {
+
+    $(inner_content_container).append(ordered_list);
+    var approaches_list_id = this.generate_unique_HTML_id("approach-list", HTML_formatted_experience_name + "-approach-list");
+    $(approaches_list_id).append(top_label).css("margin-left", "1.8rem");
+
+    for(var i = 5; i < 9; i++)
+    {
+      if(experience_data[DATA_FIELD_ARRAY[0][i]] === "on")
+      {
+        $(approaches_list_id).append("<li><h6>" + DATA_FIELD_ARRAY[0][i] + "</h6></li>"); //+ (i - 4).toString() + ") " +
+      }
+    }
+
+    $(approaches_list_id + " li").css("margin-top", "1rem");
+
+  }
+
+  add_learning_outcomes_list_to_box(inner_content_container, ordered_list, HTML_formatted_experience_name, top_label, experience_data)
+  {
+    $(inner_content_container).append(ordered_list);
+    var learning_outcomes_list_id = this.generate_unique_HTML_id("learning-outcomes-list", HTML_formatted_experience_name + "-outcome-list");
+    $(learning_outcomes_list_id).append(top_label).css("margin-left", "1.8rem");
+
+    for(var i = 13; i < 20; i++)
+    {
+      if(experience_data[DATA_FIELD_ARRAY[0][i]] === "on")
+      {
+        $(learning_outcomes_list_id).append("<li><h6>" + DATA_FIELD_ARRAY[0][i] + "</h6></li>"); //+ (i - 12).toString() + ") "
+      }
+    }
+
+    $(learning_outcomes_list_id + " li").css("margin-top", "1rem");
+
+  }
+
+  add_description_and_goals_paragraphs_after_box_expands(box_id, new_container, HTML_formatted_experience_name, experience_description_caption, experience_description, goals_caption, goals_description)
+  {
+    $(box_id).append(new_container);
+    var description_id = this.generate_unique_HTML_id("default-description-and-goals", HTML_formatted_experience_name + "-description-and-goals");
+    $(description_id).css("display", "none");
+    $(description_id).append(experience_description_caption);
+    $(description_id).append(experience_description);
+    $(description_id).append(goals_caption);
+    $(description_id).append(goals_description);
+  }
 
   generate_unique_HTML_id(id_to_change, new_id)
   {
@@ -347,10 +410,6 @@ firebase.auth().onAuthStateChanged(function(user){
       var experience_dictionary = user_data["Experiences"];
       current_user.draw_experience_box(experience_dictionary);
     }
-
-    $(document).on('click', ADD_CALENDAR_EVENT, function() {
-      current_user.init_new_google_calendar_event();
-    });
 
     $(CALENDAR_EXPAND).click(function(){
       current_user.master_calendar();

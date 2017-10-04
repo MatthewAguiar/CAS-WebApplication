@@ -33,29 +33,7 @@ function initClient() {
     discoveryDocs: DISCOVERY_DOCS,
     clientId: CLIENT_ID,
     scope: SCOPES
-  }).then(function () {
-    // Listen for sign-in state changes.
-    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-
-    // Handle the initial sign-in state.
-    updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-    //authorizeButton.onclick = handleAuthClick;
-    //signoutButton.onclick = handleSignoutClick;
   });
-}
-
-/**
- *  Called when the signed in status changes, to update the UI
- *  appropriately. After a sign-in, the API is called.
- */
-function updateSigninStatus(isSignedIn) {
-  if (isSignedIn) {
-    //authorizeButton.style.display = 'none';
-    //signoutButton.style.display = 'block';
-    console.log("HI!");
-  } else {
-    console.log("ERROR!");
-  }
 }
 
 /**
@@ -73,90 +51,127 @@ function handleSignoutClick(event) {
 }
 
 /**
- * Append a pre element to the body containing the given message
- * as its text node. Used to display the results of the API call.
- *
- * @param {string} message Text to be placed in pre element.
- */
-//function appendPre(message) {
-  //var pre = document.getElementById('content');
-  //var textContent = document.createTextNode(message + '\n');
-  //pre.appendChild(textContent);
-//}
-
-/**
  * Load the API and make an API call.  Display the results on the screen.
  */
 
-$("#pure-test").click(function(){
-  gapi.load('client:auth2', initClient);
-  handleAuthClick();
-  //callScriptFunction('');
-});
-
-function callScriptFunction(function_def) {
+function callScriptFunction(function_def, list_of_function_parameters) {
   var scriptId = "Mlqc0uE_z11lVgypf1kplBen9-6EVBqgt";
 
-  // Call the Execution API run method
-  //   'scriptId' is the URL parameter that states what script to run
-  //   'resource' describes the run request body (with the function name
-  //              to execute)
-  /*gapi.client.script.scripts.run({
-    'scriptId': scriptId,
-    'resource': {
-      'function': 'getFoldersUnderRoot'
-    }
-  });*/
+  switch(function_def)
+  {
+    case 'add_calendar_event':
 
-  gapi.client.script.scripts.run({
-    'scriptId': scriptId,
-    'resource': {
-      'function': function_def
-    }
-  }).then(function(resp) {
-    var result = resp.result;
-    if (result.error && result.error.status) {
-      // The API encountered a problem before the script
-      // started executing.
-      //appendPre('Error calling API:');
-      //appendPre(JSON.stringify(result, null, 2));
-      console.log('Error calling API:');
-      console.log(JSON.stringify(result, null, 2));
-    } else if (result.error) {
-      // The API executed, but the script returned an error.
-
-      // Extract the first (and only) set of error details.
-      // The values of this object are the script's 'errorMessage' and
-      // 'errorType', and an array of stack trace elements.
-      var error = result.error.details[0];
-      //appendPre('Script error message: ' + error.errorMessage);
-      console.log('Script error message: ' + error.errorMessage);
-      if (error.scriptStackTraceElements) {
-        // There may not be a stacktrace if the script didn't start
-        // executing.
-        //appendPre('Script error stacktrace:');
-        console.log('Script error stacktrace:');
-        for (var i = 0; i < error.scriptStackTraceElements.length; i++) {
-          var trace = error.scriptStackTraceElements[i];
-          //appendPre('\t' + trace.function + ':' + trace.lineNumber);
-          console.log('\t' + trace.function + ':' + trace.lineNumber);
+      gapi.client.script.scripts.run({
+        'scriptId': scriptId,
+        'resource': {
+          'function': function_def,
+          'parameters': [list_of_function_parameters[0], list_of_function_parameters[1], list_of_function_parameters[2]]
         }
-      }
-    } else {
-      // The structure of the result will depend upon what the Apps
-      // Script function returns. Here, the function returns an Apps
-      // Script Object with String keys and values, and so the result
-      // is treated as a JavaScript object (folderSet).
+      }).then(function(resp) {
+        var result = resp.result;
+        if (result.error && result.error.status) {
+          // The API encountered a problem before the script
+          // started executing.
+          //appendPre('Error calling API:');
+          //appendPre(JSON.stringify(result, null, 2));
+          console.log('Error calling API:');
+          console.log(JSON.stringify(result, null, 2));
+        } else if (result.error) {
+          // The API executed, but the script returned an error.
 
-      //var folderSet = result.response.result;
-      //if (Object.keys(folderSet).length == 0) {
-          //appendPre('No folders returned!');
-      //} else {
-        //appendPre('Folders under your root folder:');
-        //Object.keys(folderSet).forEach(function(id){
-          //appendPre('\t' + folderSet[id] + ' (' + id  + ')');
-        //});
-      //}
-    }
-  });
+          // Extract the first (and only) set of error details.
+          // The values of this object are the script's 'errorMessage' and
+          // 'errorType', and an array of stack trace elements.
+          var error = result.error.details[0];
+          //appendPre('Script error message: ' + error.errorMessage);
+          console.log('Script error message: ' + error.errorMessage);
+          if (error.scriptStackTraceElements) {
+            // There may not be a stacktrace if the script didn't start
+            // executing.
+            //appendPre('Script error stacktrace:');
+            console.log('Script error stacktrace:');
+            for (var i = 0; i < error.scriptStackTraceElements.length; i++) {
+              var trace = error.scriptStackTraceElements[i];
+              //appendPre('\t' + trace.function + ':' + trace.lineNumber);
+              console.log('\t' + trace.function + ':' + trace.lineNumber);
+            }
+          }
+        } else {
+          // The structure of the result will depend upon what the Apps
+          // Script function returns. Here, the function returns an Apps
+          // Script Object with String keys and values, and so the result
+          // is treated as a JavaScript object (folderSet).
+
+          //var folderSet = result.response.result;
+          //if (Object.keys(folderSet).length == 0) {
+              //appendPre('No folders returned!');
+          //} else {
+            //appendPre('Folders under your root folder:');
+            //Object.keys(folderSet).forEach(function(id){
+              //appendPre('\t' + folderSet[id] + ' (' + id  + ')');
+            //});
+          //}
+        }
+      });
+      break;
+
+    case 'create_calendar':
+
+      gapi.client.script.scripts.run({
+        'scriptId': scriptId,
+        'resource': {
+          'function': function_def
+        }
+      }).then(function(resp) {
+        var result = resp.result;
+        if (result.error && result.error.status) {
+          // The API encountered a problem before the script
+          // started executing.
+          //appendPre('Error calling API:');
+          //appendPre(JSON.stringify(result, null, 2));
+          console.log('Error calling API:');
+          console.log(JSON.stringify(result, null, 2));
+        } else if (result.error) {
+          // The API executed, but the script returned an error.
+
+          // Extract the first (and only) set of error details.
+          // The values of this object are the script's 'errorMessage' and
+          // 'errorType', and an array of stack trace elements.
+          var error = result.error.details[0];
+          //appendPre('Script error message: ' + error.errorMessage);
+          console.log('Script error message: ' + error.errorMessage);
+          if (error.scriptStackTraceElements) {
+            // There may not be a stacktrace if the script didn't start
+            // executing.
+            //appendPre('Script error stacktrace:');
+            console.log('Script error stacktrace:');
+            for (var i = 0; i < error.scriptStackTraceElements.length; i++) {
+              var trace = error.scriptStackTraceElements[i];
+              //appendPre('\t' + trace.function + ':' + trace.lineNumber);
+              console.log('\t' + trace.function + ':' + trace.lineNumber);
+            }
+          }
+        } else {
+          // The structure of the result will depend upon what the Apps
+          // Script function returns. Here, the function returns an Apps
+          // Script Object with String keys and values, and so the result
+          // is treated as a JavaScript object (folderSet).
+
+          //var folderSet = result.response.result;
+          //if (Object.keys(folderSet).length == 0) {
+              //appendPre('No folders returned!');
+          //} else {
+            //appendPre('Folders under your root folder:');
+            //Object.keys(folderSet).forEach(function(id){
+              //appendPre('\t' + folderSet[id] + ' (' + id  + ')');
+            //});
+          //}
+        }
+      });
+
+  }
+
+
+
+
 }
