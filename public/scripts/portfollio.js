@@ -29,7 +29,6 @@ const CAS_STRAND_BUTTON_CLASS = ".CAS-strand-buttons";
 const CREATIVITY_STRAND = DATA_FIELD_ARRAY[1][2];
 const ACTION_STRAND = DATA_FIELD_ARRAY[1][3];
 const SERVICE_STRAND = DATA_FIELD_ARRAY[1][4];
-var EXPERPIENCE_CLICK = false;
 
 const HTML_BODY = 'body';
 const NEW_EXPERIENCE_BUTTON = '#add-experience';
@@ -186,7 +185,7 @@ class User {
 
         var inner_content_container = this.insert_content_container_in_box(box_id, HTML_formatted_experience_name);
 
-        this.add_experience_name_to_box(inner_content_container, default_experience_elements[0], HTML_formatted_experience_name, experience_name);
+        var experience_box_title = this.add_experience_name_to_box(inner_content_container, default_experience_elements[0], HTML_formatted_experience_name, experience_name);
 
         this.add_CAS_strands_to_box(inner_content_container, default_experience_elements[1], HTML_formatted_experience_name, [
         experience_data["Creativity Strand"], experience_data["Action Strand"], experience_data["Service Strand"]
@@ -209,20 +208,21 @@ class User {
       //$(CALENDAR_EXPAND).css("background-color", box_color);
       //$(MASTER_CALENDAR_NAV).css("background-color", box_color);
       var box_instance_id = "#" + $(this).find(".description-and-goals").attr('id');
-      console.log(box_instance_id);
-      if(!EXPERPIENCE_CLICK)
+      var box_height = $(this).height();
+
+      if(box_height === 240)
       {
         $(this).css("height", "45rem");
-        setTimeout(function(){
-          $(box_instance_id).fadeIn(1000);
-        }, 1000);
-        EXPERPIENCE_CLICK = true;
+
+        $(".popup-title").remove();
+        SELECTED_EXPERIENCE = $(this).find(".experience-name-style").text();
+        $(MASTER_CALENDAR_NAV).prepend('<h6 class = "popup-title">' + 'Selected Experience: ' + SELECTED_EXPERIENCE + '</h6>');
+        $(box_instance_id).fadeIn(2000);
       }
       else
       {
-        $(box_instance_id).fadeOut(100);
         $(this).css("height", "15rem");
-        EXPERPIENCE_CLICK = false;
+        $(box_instance_id).fadeOut(100);
       }
     });
 
@@ -261,6 +261,8 @@ class User {
     $(inner_content_container).append(h6_element);
     var experience_title_id = this.generate_unique_HTML_id("experience-name", HTML_formatted_experience_name + "-title");
     $(experience_title_id).text(experience_name);
+
+    return experience_title_id;
 
   }
 
@@ -340,6 +342,9 @@ class User {
     $(description_id).append(experience_description);
     $(description_id).append(goals_caption);
     $(description_id).append(goals_description);
+
+    return description_id;
+
   }
 
   generate_unique_HTML_id(id_to_change, new_id)
@@ -387,6 +392,7 @@ class User {
 var creativity_boolean = false;
 var action_boolean = false;
 var service_boolean = false;
+var SELECTED_EXPERIENCE = "";
 
 firebase.auth().onAuthStateChanged(function(user){
 

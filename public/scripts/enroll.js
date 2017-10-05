@@ -7,7 +7,8 @@ const CREATE_ACCOUNT_BUTTON = document.getElementById('create-account');
 
 const NUMBERS_STRING = "0123456789";
 const LETTERS_STRING = "abcdefghijklmnopqrstuvwxwz";
-const ERROR_MESSAGE = "<h1 class = 'email-error error-formatting'>Your username or password is incorrect or not valid. Make sure you fill in all the fields.</h1>";
+const ERROR_MESSAGE = "<h1 class = 'email-error error-formatting'>Your username or password is incorrect or not valid. Make sure you fill in all the fields. Password must be at least 8 characters long.</h1>";
+const NON_MATCHING_PASSWORD_MESSAGE = `<h1 class = 'email-error error-formatting'>Please try again. Make sure the email you enter above is the SAME as the one you choose to link to Google with.</h1>`;
 
 const CAS_ROOT_DATABASE = firebase.database().ref();
 
@@ -142,10 +143,35 @@ CREATE_ACCOUNT_BUTTON.addEventListener('click', function(){
 firebase.auth().getRedirectResult().then(function(result){
   if(result.credential)
   {
+
     var credential = result.credential;
     var user = result.user;
 
-    document.location.href = "portfollio.html";
+    var google_email = user["providerData"]["0"]["email"];
+    var user_email = user["providerData"]["1"]["email"];
+    console.log(user_email);
+    console.log(google_email);
+    console.log(credential);
+    console.log(user);
+
+    if(user_email === google_email)
+    {
+      document.location.href = "portfollio.html";
+    }
+    else
+    {
+
+      $('body').append(NON_MATCHING_PASSWORD_MESSAGE);
+
+      var user_data = firebase.auth().currentUser;
+
+      user_data.delete().then(function() {
+        // User deleted.
+      }).catch(function(error) {
+        // An error happened.
+      });
+
+    }
 
   }
 }).catch(function(error) {

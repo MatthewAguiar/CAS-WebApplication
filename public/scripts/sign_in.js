@@ -1,25 +1,27 @@
 
 
-var email_signin_entry = document.getElementById('username-entry');
-var password_signin_entry = document.getElementById('password-entry');
-var signin_button = document.getElementById('sign-in');
-var enroll_button = document.getElementById('enroll');
+const EMAIL_SIGNIN_ENTRY = document.getElementById('username-entry');
+const PASSWORD_SIGNIN_ENTRY = document.getElementById('password-entry');
+const SIGNIN_BUTTON = document.getElementById('sign-in');
+const ENROLL_BUTTON = document.getElementById('enroll');
+const ERROR_MESSAGE = "<h1 id = 'error-message'>This account does not exist. Please click enroll to make one.</h1>";
 
-signin_button.addEventListener('click', function(){
+SIGNIN_BUTTON.addEventListener('click', function(){
 
-  var username = email_signin_entry.value;
-  var password = password_signin_entry.value;
+  var username = EMAIL_SIGNIN_ENTRY.value;
+  var password =  PASSWORD_SIGNIN_ENTRY.value;
   //console.log(username);
   //console.log(password);
+
   var sign_in = firebase.auth().signInWithEmailAndPassword(username, password);
   sign_in.catch(function(error){
-    console.log(e.message)
+    $('body').append(ERROR_MESSAGE);
   });
 
-  firebase.auth().onAuthStateChanged(firebaseUser => {
-    if(firebaseUser)
+  firebase.auth().onAuthStateChanged(function(user){
+    if(user)
     {
-      console.log(firebaseUser);
+      console.log(user);
       document.location.href = "portfollio.html";
     }
     else
@@ -30,6 +32,6 @@ signin_button.addEventListener('click', function(){
 
 });
 
-enroll_button.addEventListener('click', function(){
+ENROLL_BUTTON.addEventListener('click', function(){
   document.location.href = 'enroll.html';
 });
