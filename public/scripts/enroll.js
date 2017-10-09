@@ -69,6 +69,7 @@ function populate_user_database(user_ID, user_name, password, email)
   CAS_ROOT_DATABASE.child(student_branch + user_ID).child("Name").set(user_name);
   CAS_ROOT_DATABASE.child(student_branch + user_ID).child("Password").set(password);
   CAS_ROOT_DATABASE.child(student_branch + user_ID).child("Email").set(email);
+  CAS_ROOT_DATABASE.child(student_branch + user_ID).child("Total Reflections").set(0);
 }
 
 //Main Code

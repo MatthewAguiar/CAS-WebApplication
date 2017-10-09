@@ -115,12 +115,13 @@ function callScriptFunction(function_def, list_of_function_parameters) {
       });
       break;
 
-    case 'create_calendar':
+    case 'change_calendar_dates':
 
       gapi.client.script.scripts.run({
         'scriptId': scriptId,
         'resource': {
-          'function': function_def
+          'function': function_def,
+          'parameters': [list_of_function_parameters[0], list_of_function_parameters[1], list_of_function_parameters[2], list_of_function_parameters[3], list_of_function_parameters[4]]
         }
       }).then(function(resp) {
         var result = resp.result;

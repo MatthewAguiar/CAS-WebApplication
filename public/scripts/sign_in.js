@@ -4,7 +4,7 @@ const EMAIL_SIGNIN_ENTRY = document.getElementById('username-entry');
 const PASSWORD_SIGNIN_ENTRY = document.getElementById('password-entry');
 const SIGNIN_BUTTON = document.getElementById('sign-in');
 const ENROLL_BUTTON = document.getElementById('enroll');
-const ERROR_MESSAGE = "<h1 id = 'error-message'>This account does not exist. Please click enroll to make one.</h1>";
+const ERROR_MESSAGE = "#error-message";
 
 SIGNIN_BUTTON.addEventListener('click', function(){
 
@@ -15,7 +15,7 @@ SIGNIN_BUTTON.addEventListener('click', function(){
 
   var sign_in = firebase.auth().signInWithEmailAndPassword(username, password);
   sign_in.catch(function(error){
-    $('body').append(ERROR_MESSAGE);
+    $(ERROR_MESSAGE).css("display", "block");
   });
 
   firebase.auth().onAuthStateChanged(function(user){

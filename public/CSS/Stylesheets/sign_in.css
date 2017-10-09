@@ -70,4 +70,22 @@ button:hover{
   font-size: 1.3rem;
   color: red;
   text-shadow: 1px 1px 2px black;
+  margin-top: 2rem;
+  display: none;
+}
+
+h1{
+  width: 100%;
+  font-size: 13px;
+  text-align: center;
+  margin-top: 7rem;
+}
+
+a{
+  color: white;
+  text-decoration: none;
+}
+
+a:hover{
+  text-decoration: underline;
 }
