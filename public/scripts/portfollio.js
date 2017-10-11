@@ -91,17 +91,17 @@ const ADD_IMAGE_REFLECTION = `
 `;
 const ADD_VIDEO_REFLECTION = `
   <span>Add Video Reflection</span>
-  <h2 class = "choose-link-label">Web Page Link</h2>
-  <input class = "image-form-indent" class = "HTML-link type" = "text"></input>
+  <h2 class = "choose-link-label">Youtube Link</h2>
+  <input class = "image-form-indent HTML-link" type" = "text"></input>
   <button class = "blue-button-style save-to-database add-to-database-shift-right" id = "web-video-add" style = "display: inline;" type = "button">Add Internet Video</button>
-  <h2 class = "choose-file-label">Upload a Video File</h2>
-  <input class = "image-form-indent" id = "video-file-upload" type = file></input>
-  <button class = "blue-button-style save-to-database add-to-database-shift-right" style = "display: inline;" type = "button">Add Video File</button>
+  <!-- <h2 class = "choose-file-label">Upload a Video File</h2> -->
+  <!-- <input class = "image-form-indent" id = "video-file-upload" type = file></input> -->
+  <!-- <button class = "blue-button-style save-to-database add-to-database-shift-right" style = "display: inline;" type = "button">Add Video File</button> -->
 `;
 const ADD_LINK_REFLECTION = `
   <span>Add Web Page Reflection</span>
   <h2 class = "choose-link-label">Web Page Link</h2>
-  <input class = "image-form-indent" class = "HTML-link" type" = "text"></input>
+  <input class = "image-form-indent HTML-link" type" = "text"></input>
   <button class = "blue-button-style save-to-database add-to-database-shift-right" style = "display: inline;" type = "button">Add Web Page File</button>
 `;
 const REFLECTION_BUTTON = "#reflection-button";
@@ -110,7 +110,7 @@ const CONFIRM_REFLECTION_BUTTON = ".save-to-database";
 const HTML_LINK = ".HTML-link";
 const IMAGE_FILE_UPLOAD = "#image-file-upload";
 const WEB_IMAGE_ADD = "web-image-add";
-const VIDEO_FILE_UPLOAD = "#video-file-upload";
+//const VIDEO_FILE_UPLOAD = "#video-file-upload";
 const WEB_VIDEO_ADD = "web-video-add";
 
 const REFLECTION_BOX_DISPLAY = `
@@ -545,16 +545,16 @@ class User {
       case "Videos":
         $(".new-CAS-form").prepend(ADD_VIDEO_REFLECTION);
 
-        var file_upload_element_id = document.getElementById("video-file-upload");
+        //var file_upload_element_id = document.getElementById("video-file-upload");
 
-        file_upload_element_id.addEventListener('change', function(file_uploader){
+        //file_upload_element_id.addEventListener('change', function(file_uploader){
 
-          var file = file_uploader.target.files[0];
-          USER_VIDEO_PATH = 'Reflections/' + user_ID + '/Videos/' + file.name;
-          var storage_reference = firebase.storage().ref('Reflections/' + user_ID + '/Videos/' + file.name);
-          storage_reference.put(file);
+          //var file = file_uploader.target.files[0];
+          //USER_VIDEO_PATH = 'Reflections/' + user_ID + '/Videos/' + file.name;
+          //var storage_reference = firebase.storage().ref('Reflections/' + user_ID + '/Videos/' + file.name);
+          //storage_reference.put(file);
 
-        });
+        //});
 
         break;
 
@@ -590,23 +590,14 @@ class User {
         {
           var get_reflection_data = USER_IMAGE_PATH;
         }
-
         break;
 
       case "Videos":
-        if(reflection_button_id === WEB_VIDEO_ADD)
-        {
           var get_reflection_data = $(HTML_LINK).val();
-        }
-        else
-        {
-          var get_reflection_data = USER_VIDEO_PATH;
-        }
-
-        break;
+          break;
 
       case "Web Links":
-        var get_reflection_data = $(HTML_LINK).val();
+          var get_reflection_data = $(HTML_LINK).val();
 
     }
 
@@ -648,12 +639,13 @@ class User {
   gather_written_reflections(reflection_data)
   {
 
+    this.clear_reflection_panel();
+
     for(var reflection in reflection_data)
     {
       if(reflection !== "Number of Reflections")
       {
         //console.log(reflection);
-        $(REFLECTION_CLASS).remove();
         $('.reflection-display').append(REFLECTION_BOX_DISPLAY);
         $(REFLECTION_CLASS).append("<h4 class = 'reflection-content'>Date: " + reflection + "</h4>");
         $(REFLECTION_CLASS).append("<p class = 'reflection-content'>Reflection: " + reflection_data[reflection] + "</p>");
@@ -665,6 +657,8 @@ class User {
   gather_media_reflections(reflection_data)
   {
 
+    this.clear_reflection_panel();
+
     var counter = 1;
 
       for(var media_directory in reflection_data)
@@ -673,23 +667,28 @@ class User {
         {
           console.log(media_directory);
           console.log(reflection_data[media_directory]);
-          var get_url = "https://firebasestorage.googleapis.com/v0/b/scpscas.appspot.com/o/" + this.format_firebase_image_URL(reflection_data[media_directory]) + "?alt=media&token=ad69400a-3384-43f7-91e9-006381c72c7d";//firebase.storage().ref(reflection_data[photo_directory]);
-          console.log(get_url);
 
           $('.reflection-display').append(REFLECTION_BOX_DISPLAY);
           $(REFLECTION_CLASS).append("<h4 class = 'reflection-content'>Date: " + media_directory + "</h4>");
-          var media_id = "Photo" + counter.toString();
             if(REFLECTION_TYPE === "Images")
             {
+              var media_id = "Photo" + counter.toString();
+              var get_url = "https://firebasestorage.googleapis.com/v0/b/scpscas.appspot.com/o/" + this.format_firebase_media_URL(reflection_data[media_directory], "Image") + "?alt=media&token=ad69400a-3384-43f7-91e9-006381c72c7d";//firebase.storage().ref(reflection_data[photo_directory]);
+              console.log(get_url);
               $(REFLECTION_CLASS).append("<img class = 'reflection-content media-size' id = '" + media_id + "' />");
               $("#" + media_id).attr("src", get_url);
             }
             else
             {
-              $(REFLECTION_CLASS).append("<video class = 'reflection-content media-size' id = '" + media_id + "' controls><source/>Video could not be loaded</video>");
-              $("#" + media_id + " source").attr("src", get_url);
+              var media_id = "Video" + counter.toString();
+              var param_id = "Param" + counter.toString();
+              var get_url = this.format_firebase_media_URL(reflection_data[media_directory], "Video") //"https://www.youtube.com/embed/X76udybAfjI";//firebase.storage().ref(reflection_data[photo_directory]);
+              console.log(get_url);
+              $(REFLECTION_CLASS).append("<object  width = '425' height = '350' class = 'youtube-video' id = '" + media_id + "' data = '' type = 'application/x-shockwave-flash'><param id = '" + param_id + "' name = 'src' value = '' /></object>");
+              $("#" + media_id).attr("data", get_url);
+              $("#" + param_id).attr("value", get_url);
             }
-          counter++;
+            counter++;
           console.log(media_id);
 
         }
@@ -697,11 +696,49 @@ class User {
 
   }
 
-  format_firebase_image_URL(url)
+  gather_web_link_reflections(reflection_data)
   {
-    var new_url = url.replace(/\//g, "%2F");
-    new_url.replace("https://firebasestorage.googleapis.com/v0/b/scpscas.appspot.com/o/", "");
-    return new_url;
+
+    this.clear_reflection_panel();
+
+    var link_counter = 1;
+
+    for(var web_link in reflection_data)
+    {
+
+      if(web_link !== "Number of Reflections")
+      {
+        var link_id = "Web-Link-" + link_counter.toString();
+        $('.reflection-display').append(REFLECTION_BOX_DISPLAY);
+        $(REFLECTION_CLASS).append("<h4 class = 'reflection-content'>Date: " + web_link + "</h4>");
+        $(REFLECTION_CLASS).append("<p class = 'reflection-content'><a target = '_blank' id = '" + link_id + "'>Reflection: " + reflection_data[web_link] + "</a></p>");
+        $("#" + link_id).attr("href", reflection_data[web_link]);
+        link_counter++;
+      }
+
+    }
+
+  }
+
+  format_firebase_media_URL(url, video_or_image)
+  {
+    if(video_or_image === "Image")
+    {
+      var new_url = url.replace(/\//g, "%2F");
+      new_url.replace("https://firebasestorage.googleapis.com/v0/b/scpscas.appspot.com/o/", "");
+      return new_url;
+    }
+    else
+    {
+      var new_url = url.replace("watch?v=", "v/");
+      return new_url;
+    }
+  }
+
+  clear_reflection_panel()
+  {
+    $('.reflection-content').remove();
+    $(REFLECTION_CLASS).remove();
   }
 
 }
@@ -753,12 +790,9 @@ firebase.auth().onAuthStateChanged(function(user){
 
     $(document).on('click', '.reflection-type', function(){
       REFLECTION_TYPE = $(this).text();
-      /*
-      $('.reflection-type').addClass("blue-button-style");
-      $(this).removeClass("blue-button-style");
-      $(this).addClass("green-selected-button");
+      $('.reflection-type').attr('id', '');
+      $(this).attr('id', 'green-selected-button');
       //console.log(REFLECTION_TYPE);
-      */
     });
 
     $(document).on('click', REFLECTION_ADD_BUTTON, function(){
@@ -777,6 +811,14 @@ firebase.auth().onAuthStateChanged(function(user){
       {
         current_user.gather_written_reflections(user_data["Experiences"][SELECTED_EXPERIENCE]["Reflections"]["Journal"]);
       }
+      else if((REFLECTION_TYPE === "Images" || REFLECTION_TYPE === "Videos") && (user_pointer.hasChild("Experiences/" + SELECTED_EXPERIENCE + "/Reflections/" + REFLECTION_TYPE)))
+      {
+        current_user.gather_media_reflections(user_data["Experiences"][SELECTED_EXPERIENCE]["Reflections"][REFLECTION_TYPE]);
+      }
+      else if(REFLECTION_TYPE === "Web Links" && user_pointer.hasChild("Experiences/" + SELECTED_EXPERIENCE + "/Reflections/" + REFLECTION_TYPE))
+      {
+        current_user.gather_web_link_reflections(user_data["Experiences"][SELECTED_EXPERIENCE]["Reflections"][REFLECTION_TYPE]);
+      }
 
     });
 
@@ -789,6 +831,10 @@ firebase.auth().onAuthStateChanged(function(user){
       else if((REFLECTION_TYPE === "Images" || REFLECTION_TYPE === "Videos") && (user_pointer.hasChild("Experiences/" + SELECTED_EXPERIENCE + "/Reflections/" + REFLECTION_TYPE)))
       {
         current_user.gather_media_reflections(user_data["Experiences"][SELECTED_EXPERIENCE]["Reflections"][REFLECTION_TYPE]);
+      }
+      else if(REFLECTION_TYPE === "Web Links" && user_pointer.hasChild("Experiences/" + SELECTED_EXPERIENCE + "/Reflections/" + REFLECTION_TYPE))
+      {
+        current_user.gather_web_link_reflections(user_data["Experiences"][SELECTED_EXPERIENCE]["Reflections"][REFLECTION_TYPE]);
       }
 
     });

@@ -450,11 +450,12 @@ textarea{
 
 .reflection-display{
   width: 65%;
-  height: 33rem;
+  height: 29rem;
   background-color: white;
   border-radius: 4px;
   box-shadow: 0px 1px 5px black;
   margin: 2rem 2rem 0rem 2rem;
+  overflow: scroll;
 }
 
 .inner-reflection-flexbox{
@@ -488,7 +489,6 @@ textarea{
 
 .reflection{
   width: 100%;
-  height: auto;
   border-bottom: 1px solid black;
 }
 
@@ -506,6 +506,11 @@ textarea{
   width: 23rem;
   height: auto;
   margin-bottom: 1rem;
+}
+
+.youtube-video{
+  margin: 1rem 0rem 1rem 1rem;
+  border: 4px;
 }
 
 #journal-textarea{
@@ -540,13 +545,13 @@ textarea{
   margin-left: 2rem;
 }
 
-.green-selected-button{
-  background-color: rgb(124, 252, 0);
+#green-selected-button{
+  background-color: rgb(100, 252, 0);
   transition: transition: background-color 150ms linear;
 }
 
-.green-selected-button:hover{
-  background-color: rgb(0, 128, 0);
+#green-selected-button:hover{
+  background-color: rgb(0, 175, 0);
 }
 
 .add-to-database-shift-right{
