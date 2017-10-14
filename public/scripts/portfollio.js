@@ -124,6 +124,8 @@ const CAS_ROOT_DATABASE = firebase.database().ref();
 
 const EXPERIENCE_BOX = ".experience-box";
 
+var date_object = new Date();
+
 class User {
 
   constructor(name, email)
@@ -245,7 +247,7 @@ class User {
     var default_experience_elements = ['<h6 class = "experience-name-style" id = "experience-name"></h6>', '<img id = "CAS-strand-icon" src = "" />',
     '<img id = "CAS-project-icon" src = "" />', '<p id = "learning-outcomes-portfollio"></p>', '<p id = "experience-description"></p>', '<ol id = "approach-list"></ol>',
     '<h6>Approaches:</h6>', '<ol id = "learning-outcomes-list"></ol>', '<h6>Learning Outcomes:</h6>', '<div class = "description-and-goals" id = "default-description-and-goals"></div>',
-    '<h6>Experience Description:</h6>', '<h6>Goals:</h6>'];
+    '<h6 class = "goals-and-description-header">Experience Description:</h6>', '<h6 class = "goals-and-description-header">Goals:</h6>'];
 
     for(var experience_name in list_of_experiences)
     {
@@ -425,6 +427,7 @@ class User {
     var description_id = this.generate_unique_HTML_id("default-description-and-goals", HTML_formatted_experience_name + "-description-and-goals");
     $(description_id).css("display", "none");
     $(description_id).append(experience_description_caption);
+    //$(experience_description_caption).attr("id");
     $(description_id).append(experience_description);
     $(description_id).append(goals_caption);
     $(description_id).append(goals_description);
@@ -568,9 +571,10 @@ class User {
   add_reflection_to_database(user_directory, user_data, database_pointer, reflection_button_id)
   {
 
-    var date_object = new Date();
-    var date = this.format_calendar(date_object.getFullYear() + '-' + (date_object.getMonth() + 1) + '-' + date_object.getDate()) + ' ' + this.format_24_hour_clock(date_object.getHours()) + ':' +
-    date_object.getMinutes() + ':' + date_object.getSeconds();
+    var date = this.format_calendar(date_object.getFullYear() + '-' + (date_object.getMonth() + 1) + '-' + date_object.getDate()) + ' ' + this.format_24_hour_clock(date_object.getHours(),
+    date_object.getMinutes(), date_object.getSeconds());
+
+    var date_YYYY_MM_DD = date_object.getFullYear() + '-' + (date_object.getMonth() + 1) + '-' + date_object.getDate();
     //console.log(date_object);
 
     switch(REFLECTION_TYPE)
@@ -613,6 +617,7 @@ class User {
     }
 
     user_directory.child("Total Reflections").set(user_data["Total Reflections"] + 1);
+    user_directory.child("Date of Last Reflection").set(date_YYYY_MM_DD);
     reflection_directory.child(date).set(get_reflection_data);
     //reflection_directory.child("Date").set(date);
 
@@ -620,20 +625,56 @@ class User {
 
   }
 
-  format_24_hour_clock(hour)
+  format_24_hour_clock(hour, minute, second)
   {
     //console.log(hour);
 
+    minute = minute.toString();
+    second = second.toString();
+
     if(hour > 12)
     {
-      return hour - 12;
+      var time_of_day = "PM";
+      var formatted_hour = hour - 12;
+    }
+    else if(hour === 12)
+    {
+      var time_of_day = "PM";
+      var formatted_hour = hour;
     }
     else if(hour === 0)
     {
-      return 12;
+      var time_of_day = "AM";
+      var formatted_hour = 12;
+    }
+    else
+    {
+      var time_of_day = "AM";
+      var formatted_hour = hour;
+    }
+    //alert("Length: " + minute.length);
+    if(minute.length === 1)
+    {
+      var formatted_minute = "0" + minute;
+    }
+    else
+    {
+      var formatted_minute = minute;
+    }
+    //alert("Second Length: " + second.length);
+    if(second.length === 1)
+    {
+      var formatted_second = "0" + second;
+    }
+    else
+    {
+      var formatted_second = second;
     }
 
-    return hour;
+    console.log(formatted_hour + ':' + formatted_minute + ':' + formatted_second);
+
+    return formatted_hour + ':' + formatted_minute + ':' + formatted_second + ' ' + time_of_day;
+
   }
 
   gather_written_reflections(reflection_data)
@@ -741,6 +782,36 @@ class User {
     $(REFLECTION_CLASS).remove();
   }
 
+  get_days_since_last_reflection(start_year, start_month, start_day, end_year, end_month, current_day, days_in_month, starting_point, days_passed)
+  {
+
+    if(start_month === end_month)
+    {
+      return days_passed; //+ current_day;
+    }
+    else if(start_month < 13)
+    {
+      return this.get_days_since_last_reflection(start_year, start_month + 1, start_day, end_year, end_month, current_day, new Date(start_year, start_month + 2, 0).getDate(), 0,
+             days_passed + (days_in_month - starting_point));
+    }
+    else
+    {
+      return this.get_days_since_last_reflection(start_year, 1, start_day, end_year, end_month, current_day, new Date(start_year, 3, 0).getDate(), 0,
+             days_passed + (days_in_month - starting_point));
+    }
+
+    /*
+    alert(start_year);
+    alert(start_month);
+    alert(start_day);
+    alert(end_year);
+    alert(end_month);
+    alert(current_day);
+    alert(days_in_month);
+    */
+
+  }
+
 }
 
 //Main Code
@@ -768,6 +839,19 @@ firebase.auth().onAuthStateChanged(function(user){
 
     var current_user = new User(username, user_email);
 
+    var days = current_user.get_days_since_last_reflection(2017, 10, 13, 2018, 2, 21, 31, 13, 0);
+
+  console.log(days);
+
+    /*
+    var has_reflections = user_pointer.hasChild("Date of Last Reflection");
+    if(has_reflections)
+    {
+      current_user.get_days_since_last_reflection(parseInt(user_data["Date of Last Reflection"].substring(0, 5)), parseInt(user_data["Date of Last Reflection"].substring(5, 7)),
+    parseInt(user_data["Date of Last Reflection"].substring(8, 10)), date_object.getFullYear(), date_object.getMonth() + 1, date_object.getDate(),
+    new Date(date_object.getFullYear(), date_object.getMonth() + 1, 0).getDate(), parseInt(user_data["Date of Last Reflection"].substring(8, 10)), 0);
+    }
+    */
     var has_experiences = user_pointer.hasChild("Experiences");
     if(has_experiences)
     {
