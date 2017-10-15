@@ -93,6 +93,7 @@ body{
   height: 100%;
   background-color: black;
   opacity: 0.35;
+  z-index: 15;
 }
 /*MAKE CLASS FOR ABSOLUTE!*/
 span{
@@ -128,6 +129,7 @@ form{
   background-color: rgb(255, 255, 235);
   border: 1.5px solid black;
   border-radius: 5px;
+  z-index: 20;
 }
 
 input{
@@ -322,9 +324,20 @@ textarea{
 }
 
 #experience-add{
-  display: block;
-  margin-top: 2rem;
-  margin-left: 15rem;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+  margin-left: 2rem;
+}
+
+.remove-CAS-experience{
+  margin-left: 1rem;
+  color: red;
+  display: inline;
+  text-decoration: none;
+}
+
+.remove-CAS-experience:hover{
+  text-decoration: underline;
 }
 
 .master-calendar-nav{
@@ -335,6 +348,7 @@ textarea{
   top: 45rem;
   border: 1px solid black;
   transition: top 1s ease;
+  z-index: 10;
 }
 
 .master-calendar{
@@ -423,9 +437,33 @@ textarea{
   font-size: 1.3rem;
 }
 
+.goals-and-description-header{
+  font-family: "Quicksand";
+  font-weight: 1000;
+  margin-top: 1.5rem;
+  font-size: 1.3rem;
+}
+
+.description-and-goals p{
+  font-family: "Quicksand";
+  font-weight: 700;
+  margin-top: 1rem;
+}
+
+.supervisor-information p {
+    font-family: "Quicksand";
+    font-weight: 700;
+    margin-top: 1rem;
+}
+
 .box-style h6{
   font-family: "Quicksand";
   font-weight: 700;
+}
+
+#email-supervisor-button{
+  height: 2.5rem;
+  margin-left: 2rem;
 }
 
 .popup-title{
@@ -503,7 +541,7 @@ textarea{
 }
 
 .media-size{
-  width: 23rem;
+  width: 30rem;
   height: auto;
   margin-bottom: 1rem;
 }
@@ -558,6 +596,11 @@ textarea{
   margin-left: 2rem;
   padding-top: 4px;
   padding-bottom: 4px;
+}
+
+sup{
+  color: red;
+  font-size: 18px;
 }
 
 /*

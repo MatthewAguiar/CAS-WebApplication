@@ -42,6 +42,7 @@ const USER_LOGOUT_BUTTON = document.getElementById("logout-button");
 const CALENDAR_FLEX_BOX = ".calendar-flex-box";
 const CHANGE_DATES_BOX = "#change-dates-box";
 const CONFIRM_DATE_CHANGE_BUTTON = "#confirm-date-change";
+const CAS_EXPERIENCE_CANCEL = ".remove-add-CAS-experience"
 
 const REFLECTION_FLEX_BOX = `
 
@@ -120,6 +121,10 @@ const REFLECTION_BOX_DISPLAY = `
 `;
 const REFLECTION_CLASS = ".reflection";
 
+const NOTIFICATION_CENTER = `
+  
+`;
+
 const CAS_ROOT_DATABASE = firebase.database().ref();
 
 const EXPERIENCE_BOX = ".experience-box";
@@ -144,7 +149,13 @@ class User {
   CAS_experience_form()
   {
     $(HTML_BODY).append(MAIN_FORM);
-    $("form").append('<iframe id = "setup-dates-calendar" src="https://calendar.google.com/calendar/embed?src=' + this.URL_encoded_email + '&ctz=America/New_York" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe><button id = "experience-add" class = "blue-button-style" style = "display: block margin-top: 1.5rem" type = "button">Add Event</button>');
+    $("form").append('<iframe id = "setup-dates-calendar" src = "https://calendar.google.com/calendar/embed?src=' + this.URL_encoded_email + '&ctz=America/New_York" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>');
+    $("form").append('<h2><sup>*</sup> Required Field</h2>');
+    $("form").append('<button id = "experience-add" class = "blue-button-style" type = "button">Add Event</button><a href = "" class = "remove-CAS-experience">Cancel</a>')
+    $(CAS_EXPERIENCE_CANCEL).click(function(){
+      $("form").remove();
+      $(".fade-background").remove();
+    });
   }
 
   manage_CAS_strands_css(strand, background_color, opacity, shadow)
@@ -157,7 +168,57 @@ class User {
   save_new_experience_data(directory, creativity_boolean, action_boolean, service_boolean)
   {
 
+    var skip_save = false;
+    var approaches_cleared = false;
+    var learning_outcomes_cleared = false;
+
     if(DATA_FIELD_ARRAY[0].length === DATA_FIELD_ARRAY[1].length)
+    {
+      for(var i = 0; i < DATA_FIELD_ARRAY[1].length; i++)
+      {
+
+        var input_field = $(DATA_FIELD_ARRAY[1][i]);
+
+        var check_for_supervisor_title_and_phone = ((DATA_FIELD_ARRAY[1][i] !== "#supervisor-title") && (DATA_FIELD_ARRAY[1][i] !== "#supervisor-phone"));
+        var check_CAS_strands = ((DATA_FIELD_ARRAY[0][i] !== "Creativity Strand") && (DATA_FIELD_ARRAY[0][i] !== "Action Strand") && (DATA_FIELD_ARRAY[0][i] !== "Service Strand"));
+        var check_for_one_check_box_approaches = ((i >= 5 && i <= 8) && (input_field.is(":checked")));
+        var check_for_one_check_box_learning_outcomes = ((i >= 13 && i <= 19) && (input_field.is(":checked")));
+
+        if(check_for_supervisor_title_and_phone && check_CAS_strands && i !== 1)
+        {
+
+          if(check_for_one_check_box_approaches)
+          {
+            approaches_cleared = true;
+          }
+
+          if(check_for_one_check_box_learning_outcomes)
+          {
+            learning_outcomes_cleared = true;
+          }
+
+          if((input_field.val() === "") && (!(i >= 5 && i <= 8) || !(i >= 13 && i <= 19)))
+          {
+            //alert(DATA_FIELD_ARRAY[1][i]);
+            skip_save = true;
+          }
+
+        }
+
+      }
+
+      if(!approaches_cleared || !learning_outcomes_cleared)
+      {
+        skip_save = true;
+      }
+
+    }
+    else
+    {
+      alert("ERROR!");
+    }
+
+    if(!skip_save)
     {
 
       var experience_name = $(DATA_FIELD_ARRAY[1][0]).val();
@@ -206,18 +267,22 @@ class User {
 
       }
 
-      callScriptFunction('add_calendar_event', [experience_name, google_calendar_formatted_start_date, google_calendar_formatted_end_date]);
+        callScriptFunction('add_calendar_event', [experience_name, google_calendar_formatted_start_date, google_calendar_formatted_end_date]);
 
-      var random_color_index = Math.floor(Math.random() * 6);
-      directory.child(experience_name).child("Box Color").set(EXPERIENCE_BOX_COLORS[0][random_color_index]);
+        var random_color_index = Math.floor(Math.random() * 6);
+        directory.child(experience_name).child("Box Color").set(EXPERIENCE_BOX_COLORS[0][random_color_index]);
+
+        document.location.href = 'portfollio.html';
 
     }
     else
     {
-      console.log("ERROR!");
+      alert("Please fill out all of the fields with a * before proceeding.");
     }
 
-    $(MAIN_FORM).remove();
+
+    //$("form").remove();
+    //$(".fade-background").remove();
 
   }
 
@@ -246,8 +311,10 @@ class User {
 
     var default_experience_elements = ['<h6 class = "experience-name-style" id = "experience-name"></h6>', '<img id = "CAS-strand-icon" src = "" />',
     '<img id = "CAS-project-icon" src = "" />', '<p id = "learning-outcomes-portfollio"></p>', '<p id = "experience-description"></p>', '<ol id = "approach-list"></ol>',
-    '<h6>Approaches:</h6>', '<ol id = "learning-outcomes-list"></ol>', '<h6>Learning Outcomes:</h6>', '<div class = "description-and-goals" id = "default-description-and-goals"></div>',
-    '<h6 class = "goals-and-description-header">Experience Description:</h6>', '<h6 class = "goals-and-description-header">Goals:</h6>'];
+    '<h6>Approaches:</h6>', '<ol id = "learning-outcomes-list"></ol>', '<h6>Learning Outcomes:</h6>', '<button class = "blue-button-style click-send" id = "email-supervisor-button" type = "button">Send Supervisor Review</button>',
+    '<div class = "description-and-goals" id = "default-description-and-goals"></div>', '<h6 class = "goals-and-description-header">Experience Description:</h6>',
+    '<h6 class = "goals-and-description-header">Goals:</h6>', '<div class = "supervisor-information" id = "default-supervisor-info-id"></div>',
+    '<h6 class = "goals-and-description-header">Supervisor Information:</h6>'];
 
     for(var experience_name in list_of_experiences)
     {
@@ -269,9 +336,8 @@ class User {
 
         var experience_box_title = this.add_experience_name_to_box(inner_content_container, default_experience_elements[0], HTML_formatted_experience_name, experience_name);
 
-        this.add_CAS_strands_to_box(inner_content_container, default_experience_elements[1], HTML_formatted_experience_name, [
-        experience_data["Creativity Strand"], experience_data["Action Strand"], experience_data["Service Strand"]
-        ]);
+        this.add_CAS_strands_to_box(inner_content_container, default_experience_elements[1], HTML_formatted_experience_name,
+        [experience_data["Creativity Strand"], experience_data["Action Strand"], experience_data["Service Strand"]]);
 
         this.add_CAS_project_to_box(experience_data["CAS Project"], inner_content_container, default_experience_elements[2], HTML_formatted_experience_name);
 
@@ -279,8 +345,13 @@ class User {
 
         this.add_learning_outcomes_list_to_box(inner_content_container, default_experience_elements[7], HTML_formatted_experience_name, default_experience_elements[8], experience_data);
 
-        var description_id = this.add_description_and_goals_paragraphs_after_box_expands(box_id, default_experience_elements[9], HTML_formatted_experience_name,
-        default_experience_elements[10], '<p>' + experience_data["Experience Description"] + '/<p>', default_experience_elements[11], '<p>' + experience_data["Experience Plans"] + '</p>');
+        this.add_supervisor_review_button(inner_content_container, default_experience_elements[9], experience_data["Supervisor Name"], experience_data["Supervisor Email"], experience_name, this.name);
+
+        this.add_description_and_goals_paragraphs_after_box_expands(box_id, default_experience_elements[10], HTML_formatted_experience_name,
+        default_experience_elements[11], '<p>' + experience_data["Experience Description"] + '</p>', default_experience_elements[12], '<p>' + experience_data["Experience Plans"] + '</p>');
+
+        this.add_supervisor_information(box_id, HTML_formatted_experience_name, default_experience_elements[13], default_experience_elements[14], experience_data["Supervisor Name"],
+        experience_data["Supervisor Email"], experience_data["Supervisor Title"], experience_data["Supervisor Phone"]);
 
       }
 
@@ -290,6 +361,7 @@ class User {
       //$(CALENDAR_EXPAND).css("background-color", box_color);
       //$(MASTER_CALENDAR_NAV).css("background-color", box_color);
       var box_instance_id = "#" + $(this).find(".description-and-goals").attr('id');
+      var supervisor_info_id = "#" + $(this).find(".supervisor-information").attr('id');
       var box_height = $(this).height();
 
       if(box_height === 240)
@@ -299,6 +371,8 @@ class User {
         $(".popup-title").remove();
         $("#change-date-header").remove();
         $(".start-and-end-date-font").remove();
+        $(".start-and-end-date-container").remove();
+        $("#confirm-date-change").remove();
         SELECTED_EXPERIENCE = $(this).find(".experience-name-style").text();
         $(MASTER_CALENDAR_NAV).prepend('<h6 class = "popup-title">' + 'Selected Experience: ' + SELECTED_EXPERIENCE + '</h6>');
         $(CHANGE_DATES_BOX).append('<h3 id = "change-date-header">Change Dates for: ' + SELECTED_EXPERIENCE + '</h3>');
@@ -306,11 +380,13 @@ class User {
         $(CHANGE_DATES_BOX).append('<div class = "start-and-end-date-container"><h3>End Date:</h3><input id = "change-end-date" type = "date"></input></div>');
         $(CHANGE_DATES_BOX).append('<button class = "blue-button-style" id = "confirm-date-change">Confirm</button>');
         $(box_instance_id).fadeIn(2000);
+        $(supervisor_info_id).fadeIn(2000);
       }
       else
       {
         $(this).css("height", "15rem");
         $(box_instance_id).fadeOut(100);
+        $(supervisor_info_id).fadeOut(100);
       }
     });
 
@@ -356,15 +432,17 @@ class User {
 
   add_CAS_strands_to_box(inner_content_container, image_tag, HTML_formatted_experience_name, CAS_strands_boolean_values)
   {
+
+    console.log(CAS_strands_boolean_values);
     $(inner_content_container).append(image_tag);
 
     var CAS_icon_id = this.generate_unique_HTML_id("CAS-strand-icon", HTML_formatted_experience_name + "CAS-strand-icon");
     var image_src_name = this.determine_strand_image(CAS_strands_boolean_values);
 
-    $(CAS_icon_id).attr("src", "creativity_strand.png");
-    $(CAS_icon_id).css("width", "1.8rem");
-    $(CAS_icon_id).css("height", "1.7rem");
-    $(CAS_icon_id).css("margin-left", "1.5rem");
+    $(CAS_icon_id).attr("src", image_src_name);
+    $(CAS_icon_id).css("width", "1.5rem");
+    $(CAS_icon_id).css("height", "1.5rem");
+    $(CAS_icon_id).css("margin-left", "1rem");
   }
 
   add_CAS_project_to_box(CAS_project_boolean, inner_content_container, image_tag, HTML_formatted_experience_name)
@@ -375,9 +453,9 @@ class User {
 
       $(inner_content_container).append(image_tag);
       var CAS_project_id = this.generate_unique_HTML_id("CAS-project-icon", HTML_formatted_experience_name + "-CAS-project-icon");
-      $(CAS_project_id).attr("src", "cas.png");
-      $(CAS_project_id).css("width", "1.7rem");
-      $(CAS_project_id).css("height", "1.7rem");
+      $(CAS_project_id).attr("src", "CAS_Project.png");
+      $(CAS_project_id).css("width", "2rem");
+      $(CAS_project_id).css("height", "2rem");
       $(CAS_project_id).css("margin-left", "1.5rem");
 
     }
@@ -391,38 +469,59 @@ class User {
     var approaches_list_id = this.generate_unique_HTML_id("approach-list", HTML_formatted_experience_name + "-approach-list");
     $(approaches_list_id).append(top_label).css("margin-left", "1.8rem");
 
+    var counter = 1;
+
     for(var i = 5; i < 9; i++)
     {
       if(experience_data[DATA_FIELD_ARRAY[0][i]] === "on")
       {
-        $(approaches_list_id).append("<li><h6>" + DATA_FIELD_ARRAY[0][i] + "</h6></li>"); //+ (i - 4).toString() + ") " +
+        $(approaches_list_id).append("<li><h6>" + counter.toString() + ") " + DATA_FIELD_ARRAY[0][i] + "</h6></li>");
       }
+
+      counter++;
     }
 
     $(approaches_list_id + " li").css("margin-top", "1rem");
 
   }
 
-  add_learning_outcomes_list_to_box(inner_content_container, ordered_list, HTML_formatted_experience_name, top_label, experience_data)
+  add_learning_outcomes_list_to_box(inner_content_container, ordered_list, HTML_formatted_experience_name, top_label, experience_data, user_name)
   {
     $(inner_content_container).append(ordered_list);
     var learning_outcomes_list_id = this.generate_unique_HTML_id("learning-outcomes-list", HTML_formatted_experience_name + "-outcome-list");
     $(learning_outcomes_list_id).append(top_label).css("margin-left", "1.8rem");
 
+    var counter = 1;
+
     for(var i = 13; i < 20; i++)
     {
       if(experience_data[DATA_FIELD_ARRAY[0][i]] === "on")
       {
-        $(learning_outcomes_list_id).append("<li><h6>" + DATA_FIELD_ARRAY[0][i] + "</h6></li>"); //+ (i - 12).toString() + ") "
+        $(learning_outcomes_list_id).append("<li><h6>" + counter.toString() + ") " + DATA_FIELD_ARRAY[0][i] + "</h6></li>");
       }
+
+      counter++;
     }
 
     $(learning_outcomes_list_id + " li").css("margin-top", "1rem");
 
   }
 
+  add_supervisor_review_button(inner_content_container, email_supervisor_button, supervisor_name, supervisor_email, experience_name, user_name)
+  {
+
+    $(inner_content_container).append(email_supervisor_button);
+    $('.click-send').click(function(){
+
+      callScriptFunction('send_email_to_supervisor', [supervisor_name, supervisor_email, experience_name, user_name]);
+
+    });
+
+  }
+
   add_description_and_goals_paragraphs_after_box_expands(box_id, new_container, HTML_formatted_experience_name, experience_description_caption, experience_description, goals_caption, goals_description)
   {
+
     $(box_id).append(new_container);
     var description_id = this.generate_unique_HTML_id("default-description-and-goals", HTML_formatted_experience_name + "-description-and-goals");
     $(description_id).css("display", "none");
@@ -432,7 +531,42 @@ class User {
     $(description_id).append(goals_caption);
     $(description_id).append(goals_description);
 
-    return description_id;
+    //return description_id;
+
+  }
+
+  add_supervisor_information(box_id, HTML_formatted_experience_name, new_container, header, supervisor_name, supervisor_email, supervisor_title, supervisor_phone)
+  {
+
+    $(box_id).append(new_container);
+    var description_id = this.generate_unique_HTML_id("default-supervisor-info-id", HTML_formatted_experience_name + "-supervisor-information");
+    $(description_id).css("display", "none");
+    $(description_id).append(header);
+    $(description_id).append('<p>' + 'Supervisor Name - ' + supervisor_name + '</p>');
+
+    $(description_id).append('<p>' + supervisor_name + "'s Email - " + supervisor_email + '</p>');
+
+    if(supervisor_title !== "")
+    {
+      $(description_id).append('<p>' + supervisor_name + "'s Title - " + supervisor_title + '</p>');
+    }
+
+    if(supervisor_phone !== "")
+    {
+
+      if(supervisor_phone.length === 10)
+      {
+        for(var i = 0; i < supervisor_phone.length; i++)
+        {
+          if(i === 2 || i == 6)
+          {
+            supervisor_phone = supervisor_phone.replace(supervisor_phone.slice(i, i + 1), supervisor_phone.slice(i, i + 1) + "-");
+          }
+        }
+      }
+
+      $(description_id).append('<p>' + supervisor_name + "'s Phone Number - " + supervisor_phone + '</p>');
+    }
 
   }
 
@@ -445,33 +579,31 @@ class User {
   determine_strand_image(CAS_strand_array)
   {
 
-    switch(CAS_strand_array)
+    var array_of_CAS_strand_combos = [
+    [true, false, false], [false, true, false], [false, false, true], [true, true, false], [false, true, true], [true, false, true], [true, true, true],
+    ["creativity_strand.png", "action_strand.png", "service_strand.png", "creativity_and_action_strand.png", "action_and_service_strand.png", "creativity_and_service_strand.png",
+    "full_CAS_strand.png"]
+    ];
+
+    var matching_counter = 0;
+
+    for(var i = 0; i < array_of_CAS_strand_combos.length - 1; i++)
     {
-      case [true, false, false]:
-        return "creativity_strand.png";
-
-      case [false, true, false]:
-        return "action_strand.png";
-
-      case [false, false, true]:
-        return "service_strand.png";
-
-      case [true, true, false]:
-        return "creativity_and_action_strand.png";
-
-      case [false, true, true]:
-        return "action_and_service_strand.png";
-
-      case [true, false, true]:
-        return "creativity_and_service_strand.png";
-
-      case [true, true, true]:
-        return "full_CAS_strand.png";
-
-      case [false, false, false]:
-        alert("Enter a Strand!");
-
+      for(var j = 0; j < array_of_CAS_strand_combos[i].length; j++)
+      {
+        if(CAS_strand_array[j] === array_of_CAS_strand_combos[i][j])
+        {
+          matching_counter++;
+          if(matching_counter === 3)
+          {
+            return array_of_CAS_strand_combos[7][i];
+          }
+        }
+      }
+      matching_counter = 0;
     }
+
+    return "";
 
   }
 
@@ -616,6 +748,15 @@ class User {
       reflection_directory.child("Number of Reflections").set(1);
     }
 
+    if(database_pointer.hasChild("Experiences/" + SELECTED_EXPERIENCE + "/Total Reflections for " + SELECTED_EXPERIENCE))
+    {
+        user_directory.child("Experiences").child(SELECTED_EXPERIENCE).child("Total Reflections for " + SELECTED_EXPERIENCE).set(user_data["Experiences"][SELECTED_EXPERIENCE]["Total Reflections for " + SELECTED_EXPERIENCE] + 1);
+    }
+    else
+    {
+      user_directory.child("Experiences").child(SELECTED_EXPERIENCE).child("Total Reflections for " + SELECTED_EXPERIENCE).set(1);
+    }
+
     user_directory.child("Total Reflections").set(user_data["Total Reflections"] + 1);
     user_directory.child("Date of Last Reflection").set(date_YYYY_MM_DD);
     reflection_directory.child(date).set(get_reflection_data);
@@ -680,15 +821,14 @@ class User {
   gather_written_reflections(reflection_data)
   {
 
-    this.clear_reflection_panel();
+    $('.reflection-display').append(REFLECTION_BOX_DISPLAY);
 
     for(var reflection in reflection_data)
     {
       if(reflection !== "Number of Reflections")
       {
         //console.log(reflection);
-        $('.reflection-display').append(REFLECTION_BOX_DISPLAY);
-        $(REFLECTION_CLASS).append("<h4 class = 'reflection-content'>Date: " + reflection + "</h4>");
+        $(REFLECTION_CLASS).append("<h4 class = 'reflection-content'>Reflection:Date: " + reflection + "</h4>");
         $(REFLECTION_CLASS).append("<p class = 'reflection-content'>Reflection: " + reflection_data[reflection] + "</p>");
       }
     }
@@ -698,7 +838,7 @@ class User {
   gather_media_reflections(reflection_data)
   {
 
-    this.clear_reflection_panel();
+    $('.reflection-display').append(REFLECTION_BOX_DISPLAY);
 
     var counter = 1;
 
@@ -709,7 +849,6 @@ class User {
           console.log(media_directory);
           console.log(reflection_data[media_directory]);
 
-          $('.reflection-display').append(REFLECTION_BOX_DISPLAY);
           $(REFLECTION_CLASS).append("<h4 class = 'reflection-content'>Date: " + media_directory + "</h4>");
             if(REFLECTION_TYPE === "Images")
             {
@@ -725,7 +864,7 @@ class User {
               var param_id = "Param" + counter.toString();
               var get_url = this.format_firebase_media_URL(reflection_data[media_directory], "Video") //"https://www.youtube.com/embed/X76udybAfjI";//firebase.storage().ref(reflection_data[photo_directory]);
               console.log(get_url);
-              $(REFLECTION_CLASS).append("<object  width = '425' height = '350' class = 'youtube-video' id = '" + media_id + "' data = '' type = 'application/x-shockwave-flash'><param id = '" + param_id + "' name = 'src' value = '' /></object>");
+              $(REFLECTION_CLASS).append("<object  width = '640px' height = '360px' class = 'youtube-video' id = '" + media_id + "' data = '' type = 'application/x-shockwave-flash'><param id = '" + param_id + "' name = 'src' value = '' /></object>");
               $("#" + media_id).attr("data", get_url);
               $("#" + param_id).attr("value", get_url);
             }
@@ -740,7 +879,7 @@ class User {
   gather_web_link_reflections(reflection_data)
   {
 
-    this.clear_reflection_panel();
+    $('.reflection-display').append(REFLECTION_BOX_DISPLAY);
 
     var link_counter = 1;
 
@@ -750,7 +889,6 @@ class User {
       if(web_link !== "Number of Reflections")
       {
         var link_id = "Web-Link-" + link_counter.toString();
-        $('.reflection-display').append(REFLECTION_BOX_DISPLAY);
         $(REFLECTION_CLASS).append("<h4 class = 'reflection-content'>Date: " + web_link + "</h4>");
         $(REFLECTION_CLASS).append("<p class = 'reflection-content'><a target = '_blank' id = '" + link_id + "'>Reflection: " + reflection_data[web_link] + "</a></p>");
         $("#" + link_id).attr("href", reflection_data[web_link]);
@@ -778,25 +916,25 @@ class User {
 
   clear_reflection_panel()
   {
-    $('.reflection-content').remove();
     $(REFLECTION_CLASS).remove();
+    $('.reflection-content').remove();
   }
 
   get_days_since_last_reflection(start_year, start_month, start_day, end_year, end_month, current_day, days_in_month, starting_point, days_passed)
   {
 
-    if(start_month === end_month)
+    if((start_month === end_month) && (start_year === end_year))
     {
-      return days_passed; //+ current_day;
+      return days_passed + (current_day - starting_point);
     }
-    else if(start_month < 13)
+    else if(start_month < 12)
     {
-      return this.get_days_since_last_reflection(start_year, start_month + 1, start_day, end_year, end_month, current_day, new Date(start_year, start_month + 2, 0).getDate(), 0,
+      return this.get_days_since_last_reflection(start_year, start_month + 1, start_day, end_year, end_month, current_day, new Date(start_year, start_month + 1, 0).getDate(), 0,
              days_passed + (days_in_month - starting_point));
     }
     else
     {
-      return this.get_days_since_last_reflection(start_year, 1, start_day, end_year, end_month, current_day, new Date(start_year, 3, 0).getDate(), 0,
+      return this.get_days_since_last_reflection(start_year + 1, 1, start_day, end_year, end_month, current_day, new Date(start_year, 1, 0).getDate(), 0,
              days_passed + (days_in_month - starting_point));
     }
 
@@ -839,19 +977,19 @@ firebase.auth().onAuthStateChanged(function(user){
 
     var current_user = new User(username, user_email);
 
-    var days = current_user.get_days_since_last_reflection(2017, 10, 13, 2018, 2, 21, 31, 13, 0);
+    //var days = current_user.get_days_since_last_reflection(2017, 10, 13, 2018, 2, 21, 31, 13, 0);
 
-  console.log(days);
+  //console.log(days);
 
-    /*
     var has_reflections = user_pointer.hasChild("Date of Last Reflection");
     if(has_reflections)
     {
-      current_user.get_days_since_last_reflection(parseInt(user_data["Date of Last Reflection"].substring(0, 5)), parseInt(user_data["Date of Last Reflection"].substring(5, 7)),
+      var days = current_user.get_days_since_last_reflection(parseInt(user_data["Date of Last Reflection"].substring(0, 5)), parseInt(user_data["Date of Last Reflection"].substring(5, 7)),
     parseInt(user_data["Date of Last Reflection"].substring(8, 10)), date_object.getFullYear(), date_object.getMonth() + 1, date_object.getDate(),
     new Date(date_object.getFullYear(), date_object.getMonth() + 1, 0).getDate(), parseInt(user_data["Date of Last Reflection"].substring(8, 10)), 0);
+    console.log(days);
     }
-    */
+
     var has_experiences = user_pointer.hasChild("Experiences");
     if(has_experiences)
     {
@@ -889,6 +1027,7 @@ firebase.auth().onAuthStateChanged(function(user){
 
     $(document).on('click', REFLECTION_BUTTON, function(){
       current_user.remove_calendar_info();
+      current_user.clear_reflection_panel();
       current_user.draw_reflection_tools();
 
       if(REFLECTION_TYPE === "Journal" && user_pointer.hasChild("Experiences/" + SELECTED_EXPERIENCE + "/Reflections/Journal"))
@@ -907,6 +1046,8 @@ firebase.auth().onAuthStateChanged(function(user){
     });
 
     $(document).on('click', '.reflection-type', function(){
+
+      current_user.clear_reflection_panel();
 
       if(REFLECTION_TYPE === "Journal" && user_pointer.hasChild("Experiences/" + SELECTED_EXPERIENCE + "/Reflections/Journal"))
       {
@@ -969,7 +1110,6 @@ firebase.auth().onAuthStateChanged(function(user){
 
     $(document).on('click', CONFIRM_EXPERIENCE, function(){ //Use .on for non original HTML elements!
       current_user.save_new_experience_data(user_directory.child("Experiences"), creativity_boolean, action_boolean, service_boolean);
-      document.location.href = 'portfollio.html';
     });
 
   });

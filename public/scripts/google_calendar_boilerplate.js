@@ -169,6 +169,62 @@ function callScriptFunction(function_def, list_of_function_parameters) {
           //}
         }
       });
+      break;
+
+    case 'send_email_to_supervisor':
+
+    gapi.client.script.scripts.run({
+      'scriptId': scriptId,
+      'resource': {
+        'function': function_def,
+        'parameters': [list_of_function_parameters[0], list_of_function_parameters[1], list_of_function_parameters[2], list_of_function_parameters[3]]
+      }
+    }).then(function(resp) {
+      var result = resp.result;
+      if (result.error && result.error.status) {
+        // The API encountered a problem before the script
+        // started executing.
+        //appendPre('Error calling API:');
+        //appendPre(JSON.stringify(result, null, 2));
+        console.log('Error calling API:');
+        console.log(JSON.stringify(result, null, 2));
+      } else if (result.error) {
+        // The API executed, but the script returned an error.
+
+        // Extract the first (and only) set of error details.
+        // The values of this object are the script's 'errorMessage' and
+        // 'errorType', and an array of stack trace elements.
+        var error = result.error.details[0];
+        //appendPre('Script error message: ' + error.errorMessage);
+        console.log('Script error message: ' + error.errorMessage);
+        if (error.scriptStackTraceElements) {
+          // There may not be a stacktrace if the script didn't start
+          // executing.
+          //appendPre('Script error stacktrace:');
+          console.log('Script error stacktrace:');
+          for (var i = 0; i < error.scriptStackTraceElements.length; i++) {
+            var trace = error.scriptStackTraceElements[i];
+            //appendPre('\t' + trace.function + ':' + trace.lineNumber);
+            console.log('\t' + trace.function + ':' + trace.lineNumber);
+          }
+        }
+      } else {
+        // The structure of the result will depend upon what the Apps
+        // Script function returns. Here, the function returns an Apps
+        // Script Object with String keys and values, and so the result
+        // is treated as a JavaScript object (folderSet).
+
+        //var folderSet = result.response.result;
+        //if (Object.keys(folderSet).length == 0) {
+            //appendPre('No folders returned!');
+        //} else {
+          //appendPre('Folders under your root folder:');
+          //Object.keys(folderSet).forEach(function(id){
+            //appendPre('\t' + folderSet[id] + ' (' + id  + ')');
+          //});
+        //}
+      }
+    });
 
   }
 
