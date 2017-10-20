@@ -122,8 +122,20 @@ const REFLECTION_BOX_DISPLAY = `
 const REFLECTION_CLASS = ".reflection";
 
 const NOTIFICATION_CENTER = `
-  
+
 `;
+
+const ALERT_CONTAINER = `
+
+  <div class = "alert-container">
+    <header class = "alerts">
+      <h4>Reflection Alert</h4>
+    </header>
+  </div>
+
+`;
+const ALERT_CLASS = ".alert-container";
+const CAS_PORTFOLLIO_CLASS = ".CAS-experiences";
 
 const CAS_ROOT_DATABASE = firebase.database().ref();
 
@@ -306,7 +318,7 @@ class User {
     $(MASTER_CALENDAR_NAV).toggleClass("expand-calendar");
   }
 
-  draw_experience_box(list_of_experiences)//experience_dictionary)
+  draw_experience_box(experience_name, experience_data, append_to_portfolio_or_alert)//experience_dictionary)
   {
 
     var default_experience_elements = ['<h6 class = "experience-name-style" id = "experience-name"></h6>', '<img id = "CAS-strand-icon" src = "" />',
@@ -316,9 +328,8 @@ class User {
     '<h6 class = "goals-and-description-header">Goals:</h6>', '<div class = "supervisor-information" id = "default-supervisor-info-id"></div>',
     '<h6 class = "goals-and-description-header">Supervisor Information:</h6>'];
 
-    for(var experience_name in list_of_experiences)
-    {
-      var experience_data = list_of_experiences[experience_name];
+
+      //var experience_data = list_of_experiences[experience_name];
       var box_color = experience_data["Box Color"];
       var HTML_formatted_experience_name = experience_name.replace(/ /g, "-");
 
@@ -330,7 +341,7 @@ class User {
         var color_index = EXPERIENCE_BOX_COLORS[0].indexOf(box_color);
         var rgb_color = EXPERIENCE_BOX_COLORS[1][color_index];
 
-        var box_id = this.setup_experience_box(rgb_color, HTML_formatted_experience_name);
+        var box_id = this.setup_experience_box(append_to_portfolio_or_alert, rgb_color, HTML_formatted_experience_name);
 
         var inner_content_container = this.insert_content_container_in_box(box_id, HTML_formatted_experience_name);
 
@@ -354,8 +365,6 @@ class User {
         experience_data["Supervisor Email"], experience_data["Supervisor Title"], experience_data["Supervisor Phone"]);
 
       }
-
-    }
 
     $(EXPERIENCE_BOX).click(function(){
       //$(CALENDAR_EXPAND).css("background-color", box_color);
@@ -392,11 +401,11 @@ class User {
 
   }
 
-  setup_experience_box(rgb_color, HTML_formatted_experience_name)
+  setup_experience_box(append_to_portfolio_or_alert, rgb_color, HTML_formatted_experience_name)
   {
 
     var new_HTML_experience_box = '<nav class = "experience-box" id = "default"></nav>';
-    $(HTML_BODY).append(new_HTML_experience_box);
+    $(append_to_portfolio_or_alert).append(new_HTML_experience_box);
 
     var box_id = this.generate_unique_HTML_id("default", HTML_formatted_experience_name);
 
@@ -737,20 +746,20 @@ class User {
 
     }
 
-    var reflection_directory = user_directory.child("Experiences").child(SELECTED_EXPERIENCE).child("Reflections").child(REFLECTION_TYPE);
+    var reflection_directory = user_directory.child("Experiences").child(SELECTED_EXPERIENCE).child("Reflections");
 
     if(database_pointer.hasChild("Experiences/" + SELECTED_EXPERIENCE + "/Reflections/" + REFLECTION_TYPE + "/Number of Reflections"))
     {
-      reflection_directory.child("Number of Reflections").set(user_data["Experiences"][SELECTED_EXPERIENCE]["Reflections"][REFLECTION_TYPE]["Number of Reflections"] + 1);
+      reflection_directory.child(REFLECTION_TYPE).child("Number of Reflections").set(user_data["Experiences"][SELECTED_EXPERIENCE]["Reflections"][REFLECTION_TYPE]["Number of Reflections"] + 1);
     }
     else
     {
-      reflection_directory.child("Number of Reflections").set(1);
+      reflection_directory.child(REFLECTION_TYPE).child("Number of Reflections").set(1);
     }
 
     if(database_pointer.hasChild("Experiences/" + SELECTED_EXPERIENCE + "/Total Reflections for " + SELECTED_EXPERIENCE))
     {
-        user_directory.child("Experiences").child(SELECTED_EXPERIENCE).child("Total Reflections for " + SELECTED_EXPERIENCE).set(user_data["Experiences"][SELECTED_EXPERIENCE]["Total Reflections for " + SELECTED_EXPERIENCE] + 1);
+      user_directory.child("Experiences").child(SELECTED_EXPERIENCE).child("Total Reflections for " + SELECTED_EXPERIENCE).set(user_data["Experiences"][SELECTED_EXPERIENCE]["Total Reflections for " + SELECTED_EXPERIENCE] + 1);
     }
     else
     {
@@ -758,8 +767,16 @@ class User {
     }
 
     user_directory.child("Total Reflections").set(user_data["Total Reflections"] + 1);
-    user_directory.child("Date of Last Reflection").set(date_YYYY_MM_DD);
-    reflection_directory.child(date).set(get_reflection_data);
+    user_directory.child("Quarter Reflections").set(user_data["Quarter Reflections"] + 1);
+    user_directory.child("Date of Last Reflection YYYY-MM-DD").set(date_YYYY_MM_DD);
+    reflection_directory.child("Date of Last Reflection YYYY-MM-DD").set(date_YYYY_MM_DD);
+
+
+    var time_substring = date.lastIndexOf("M");
+    var date_without_time = date.substring(0, time_substring - 10);
+    user_directory.child("Date of Last Reflection").set(date_without_time);
+
+    reflection_directory.child(REFLECTION_TYPE).child(date).set(get_reflection_data);
     //reflection_directory.child("Date").set(date);
 
     document.location.href = "portfollio.html";
@@ -920,6 +937,23 @@ class User {
     $('.reflection-content').remove();
   }
 
+  draw_notification_center(quarter_reflections, date_of_last_reflection_YYYY_MM_DD, date_of_last_reflection)
+  {
+
+    $("#quarter-reflections").append("<h6>" + quarter_reflections  + "</h6>");
+
+
+    var days = this.get_days_since_last_reflection(parseInt(date_of_last_reflection_YYYY_MM_DD.substring(0, 5)), parseInt(date_of_last_reflection_YYYY_MM_DD.substring(5, 7)),
+    parseInt(date_of_last_reflection_YYYY_MM_DD.substring(8, 10)), date_object.getFullYear(), date_object.getMonth() + 1, date_object.getDate(),
+    new Date(date_object.getFullYear(), date_object.getMonth() + 1, 0).getDate(), parseInt(date_of_last_reflection_YYYY_MM_DD.substring(8, 10)), 0);
+
+    $("#days-since").append("<h6>" + days  + "</h6>");
+    $("#date-last").append("<h6>" + date_of_last_reflection + "</h6>");
+
+    console.log(days);
+
+  }
+
   get_days_since_last_reflection(start_year, start_month, start_day, end_year, end_month, current_day, days_in_month, starting_point, days_passed)
   {
 
@@ -977,24 +1011,95 @@ firebase.auth().onAuthStateChanged(function(user){
 
     var current_user = new User(username, user_email);
 
+    var has_reflections = user_pointer.hasChild("Date of Last Reflection YYYY-MM-DD");
+    if(has_reflections)
+    {
+      current_user.draw_notification_center(user_data["Quarter Reflections"], user_data["Date of Last Reflection YYYY-MM-DD"], user_data["Date of Last Reflection"]);
+    }
+
     //var days = current_user.get_days_since_last_reflection(2017, 10, 13, 2018, 2, 21, 31, 13, 0);
 
   //console.log(days);
 
-    var has_reflections = user_pointer.hasChild("Date of Last Reflection");
-    if(has_reflections)
-    {
-      var days = current_user.get_days_since_last_reflection(parseInt(user_data["Date of Last Reflection"].substring(0, 5)), parseInt(user_data["Date of Last Reflection"].substring(5, 7)),
-    parseInt(user_data["Date of Last Reflection"].substring(8, 10)), date_object.getFullYear(), date_object.getMonth() + 1, date_object.getDate(),
-    new Date(date_object.getFullYear(), date_object.getMonth() + 1, 0).getDate(), parseInt(user_data["Date of Last Reflection"].substring(8, 10)), 0);
-    console.log(days);
-    }
-
     var has_experiences = user_pointer.hasChild("Experiences");
     if(has_experiences)
     {
+
       var experience_dictionary = user_data["Experiences"];
-      current_user.draw_experience_box(experience_dictionary);
+
+      var has_reflections = (user_data["Total Reflections"] > 0);
+      if(has_reflections)
+      {
+
+        var date_of_last_reflection = user_data["Date of Last Reflection YYYY-MM-DD"];
+
+        var days_since_reflecting = current_user.get_days_since_last_reflection(parseInt(date_of_last_reflection.substring(0, 5)), parseInt(date_of_last_reflection.substring(5, 7)),
+        parseInt(date_of_last_reflection.substring(8, 10)), date_object.getFullYear(), date_object.getMonth() + 1, date_object.getDate(),
+        new Date(date_object.getFullYear(), date_object.getMonth() + 1, 0).getDate(), parseInt(date_of_last_reflection.substring(8, 10)), 0);
+
+        if(days_since_reflecting > 7)
+        {
+
+          $(".portfolio-container").prepend(ALERT_CONTAINER);
+
+          var greatest_amount_of_time_since_reflection = 0;
+
+          for(var experience_name in experience_dictionary)
+          {
+
+            var experience_has_reflections = user_pointer.hasChild("Experiences/" + experience_name + "/Reflections/Date of Last Reflection YYYY-MM-DD");
+            if(experience_has_reflections)
+            {
+              var day_of_last_reflection_for_experience = experience_dictionary[experience_name]["Reflections"]["Date of Last Reflection YYYY-MM-DD"];
+
+              var days_since_reflecting_for_experience = current_user.get_days_since_last_reflection(parseInt(day_of_last_reflection_for_experience.substring(0, 5)), parseInt(day_of_last_reflection_for_experience.substring(5, 7)),
+              parseInt(day_of_last_reflection_for_experience.substring(8, 10)), date_object.getFullYear(), date_object.getMonth() + 1, date_object.getDate(),
+              new Date(date_object.getFullYear(), date_object.getMonth() + 1, 0).getDate(), parseInt(day_of_last_reflection_for_experience.substring(8, 10)), 0);
+
+              if(days_since_reflecting_for_experience > greatest_amount_of_time_since_reflection)
+              {
+                greatest_amount_of_time_since_reflection = days_since_reflecting_for_experience;
+                var experience_to_append_to_alert_section = experience_name;
+              }
+
+              console.log(experience_to_append_to_alert_section);
+            }
+
+          }
+
+          //var append_to_portfolio_or_alert = ".";
+          current_user.draw_experience_box(experience_to_append_to_alert_section, experience_dictionary[experience_to_append_to_alert_section], ALERT_CLASS);
+
+          for(var experience_name in experience_dictionary)
+          {
+            if(experience_name != experience_to_append_to_alert_section)
+            {
+              current_user.draw_experience_box(experience_name, experience_dictionary[experience_name], CAS_PORTFOLLIO_CLASS);
+            }
+          }
+
+        }
+        else
+        {
+
+          for(var experience_name in experience_dictionary)
+          {
+            current_user.draw_experience_box(experience_name, experience_dictionary[experience_name], CAS_PORTFOLLIO_CLASS);
+          }
+
+        }
+
+      }
+      else
+      {
+
+        for(var experience_name in experience_dictionary)
+        {
+          current_user.draw_experience_box(experience_name, experience_dictionary[experience_name], CAS_PORTFOLLIO_CLASS);
+        }
+
+      }
+
     }
 
     $(CALENDAR_EXPAND).click(function(){

@@ -36,10 +36,10 @@ body{
   display: table;
   text-align: center;
   margin-left: 2rem;
-  margin-top: 2rem;
   padding: 1.2rem;
+  margin-top: 2rem;
   border-radius: 4px;
-  box-shadow: 0px 2px 7px black;
+  box-shadow: 0px 1px 2px black;
 }
 
 #sturgis-icon{
@@ -74,15 +74,17 @@ body{
 }
 
 .alerts{
-  display: inline-block;
   font-size: 2rem;
-  font-weight: bold;
   color: white;
-  margin: 2rem 2.5rem;
-  background-color: rgba(255, 50, 75, 1);
-  padding: 0.75rem;
+  font-weight: bold;
+  background-color: rgb(255, 50, 75);
+  display: table;
+  text-align: center;
+  margin-left: 2rem;
+  padding: 1.2rem;
+  margin-top: 2rem;
   border-radius: 4px;
-  box-shadow: 0px 2px 5px black;
+  box-shadow: 0px 1px 2px black;
 }
 
 .fade-background{
@@ -601,6 +603,42 @@ textarea{
 sup{
   color: red;
   font-size: 18px;
+}
+
+.notification-center{
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.reflection-reminders{
+  display: flex;
+}
+
+.reflection-info-box{
+  width: 20rem;
+  height: 5rem;
+  color: white;
+  font-weight: bold;
+  background-color: rgb(125, 225, 125);
+  border-radius: 4px;
+  box-shadow: 0px 1px 2px black;
+  margin-top: 2rem;
+  text-align: center;
+  line-height: 1.2rem;
+}
+
+.notification-spacing{
+  margin-right: 4rem;
+}
+
+.reflection-info-box h4{
+  margin-top: 0.4rem;
+}
+
+.reflection-info-box h6{
+  margin-top: 1rem;
+  font-size: 2rem;
 }
 
 /*
