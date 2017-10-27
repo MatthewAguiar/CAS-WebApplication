@@ -1,12 +1,13 @@
-<!DOCTYPE html> <!-- Tell the browser that the document type is to be executed as HTML -->
+<!DOCTYPE html> <!-- Tell the browser that this document type is to be executed as HTML -->
 <html>
   <head>
 
-    <meta name="google-site-verification" content="Ebb43aJeiQN65WHHO5-6D3T0xAs1ktrnBbSDNdnDn7Y" />
+    <meta name = "google-site-verification" content = "Ebb43aJeiQN65WHHO5-6D3T0xAs1ktrnBbSDNdnDn7Y" />
 
-    <!-- Give the tab a title and a favicon, also link the reset and sign_in style sheets to style this HTML -->
-
+    <!-- Title shown in the tab of web browser. -->
     <title>Sturgis CAS</title>
+
+    <!-- Give the tab a favicon, also link the reset and sign_in style sheets to style this HTML -->
     <link rel="icon" type = "image/png" sizes = "16x16"  href = "full_CAS_strand.png">
     <link href="CSS/Stylesheets/reset.css" type = "text/css" rel = "stylesheet">
     <link href="CSS/Stylesheets/sign_in.css" type = "text/css" rel = "stylesheet">
@@ -14,21 +15,31 @@
   </head>
   <body>
 
+    <!-- Fetch the Sturgis Logo from the given URL and display it on the landing page. -->
     <img src = "https://upload.wikimedia.org/wikipedia/en/4/40/Sturgis_Charter_Public_School_%28logo%29.png"/>
 
+    <!-- Below is a flexbox that contains a welcome message, username and password input fields, as well as a sign-in and enroll button. -->
     <div class = "landing-page-box">
       <h1>Welcome to Sturgis CAS</h1>
       <input id = "username-entry" type="text" placeholder = "Email">
       <input id = "password-entry" type="text" placeholder = "Password">
       <button id = "sign-in">Sign In</button>
+      <!-- The enroll button below is linked to the "enroll.html" file so that upon clicking it will take the user there. -->
       <button id = "enroll">Enroll</button>
+      <!-- Using JavaScript in the "sign_in.js" file this error message will display if the user account does not currently exist when attempting to sign in. -->
       <h1 id = 'error-message'>This account does not exist. Please click enroll to make one.</h1>
     </div>
 
+    <!-- Privacy Policy links to "privacy_policy.html" file. -->
     <h1><a href = "privacy_policy.html">Privacy Policy</a></h1>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
+    <!-- Below is code that does the following:
+         1) Imports the jQuery library remotely from the jQuery website.
+         2) Imports Firebase tools required to interact with Google Firebase's database, storage module, authentication module etc.
+         3) Links the "firebase_setup.js" file to this HTML file in order to link this HTML document with it own specific, dedicated firebase project. 
+         4) Links the "sign_in.js" JavaScript file in order to interact with the HTML elements above. -->
+    <script src = "https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src = "https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
     <script src = "scripts/firebase_setup.js" type="text/javascript"></script>
     <script src = "scripts/sign_in.js" type = "text/javascript"></script>
 

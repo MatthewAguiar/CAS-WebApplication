@@ -344,10 +344,10 @@ textarea{
 
 .master-calendar-nav{
   width: 100%;
-  height: 45rem;
+  height: 100vh;
   background-color: rgb(240, 240, 240);
   position: fixed;
-  top: 45rem;
+  top: 99vh; /*45rem*/
   border: 1px solid black;
   transition: top 1s ease;
   z-index: 10;
@@ -577,6 +577,11 @@ textarea{
   margin-bottom: 2rem;
 }
 
+#image-file-upload{
+  width: 10rem;
+  margin-right: 0.8rem;
+}
+
 .HTML-link{
   width: 30rem;
 }
@@ -585,12 +590,12 @@ textarea{
   margin-left: 2rem;
 }
 
-#green-selected-button{
+.green-selected-button{
   background-color: rgb(100, 252, 0);
   transition: transition: background-color 150ms linear;
 }
 
-#green-selected-button:hover{
+.green-selected-button:hover{
   background-color: rgb(0, 175, 0);
 }
 
@@ -606,8 +611,10 @@ sup{
 }
 
 .notification-center{
+  margin: auto;
+  width: 90vw;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   text-align: center;
 }
 
@@ -641,15 +648,20 @@ sup{
   font-size: 2rem;
 }
 
-/*
-.google-login-button{
-  box-shadow: 1px 1px 8px black;
-  padding: 0.2rem;
+.reflection-numbers h6{
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.google-login-box{
-  width: 100%;
-  margin-left: 35%;
-  margin-top: 12%;
-  display: block;
-}*/
+.reflection-numbers h4{
+  font-size: 0.8rem;
+  margin-left: 1rem;
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+}
+
+#current-experience-reflections{
+  padding: 1rem 0rem;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}

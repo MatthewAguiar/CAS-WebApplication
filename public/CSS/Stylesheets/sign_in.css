@@ -1,14 +1,26 @@
+/*
+Set the default font of the Sign-in HTML page to "Arial".
+*/
 html{
   font-family: Arial;
 }
 
+/*
+Cover the entire background of the HTML page with a nice blue background.
+*/
 body{
   background-image: url("http://www.waytoumrah.com/prj_umrah/Login_Style/img/backgrounds/3.jpg");
   background-size: cover;
 }
 
+/*
+Style the Sturgis Logo to make it look more elegant.
+*/
 img{
   display: block;
+  /*
+  Setting a width and the height to auto makes sure the image scales proportionally.
+  */
   width: 10rem;
   height: auto;
   border-radius: 15px;
@@ -16,6 +28,9 @@ img{
   box-shadow: 0px 2px 5px black;
 }
 
+/*
+Style the two buttons, sign-in and enroll, to appear orange when NOT hovered.
+*/
 button{
   color: white;
   text-decoration: none;
@@ -30,10 +45,16 @@ button{
   box-shadow: 0px 1px 2px black;
 }
 
+/*
+When the button is hovered over, then fade it in linearly as stated in the transition property above.
+*/
 button:hover{
   background-color: rgb(0, 209, 109);
 }
 
+/*
+The class below makes a flexbox out of the div that contains all of the welcoming info, inputs boxes and buttons and aligns them in the center of the page.
+*/
 .landing-page-box{
   display: flex;
   width: 50%;
@@ -43,9 +64,11 @@ button:hover{
   border-radius: 8px;
   align-items: center;
   flex-direction: column;
-
 }
 
+/*
+
+*/
 .landing-page-box h1{
   font-size: 25px;
   color: white;
